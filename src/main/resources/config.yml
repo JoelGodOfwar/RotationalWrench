@@ -1,0 +1,57 @@
+# DO NOT CHANGE VERSION
+version: 1.0.3
+
+# change to false to stop auto-update-check
+auto_update_check: true
+
+# set to true before sending a log about an issue.
+# logs trace data required to pinpoint where errors are.
+debug: false
+
+# Language Selection
+lang: en_US
+
+# Enables fancy ANSI colors in console. (Disable if you're getting weird characters in the console)
+colorful_console: true
+
+# Enabled
+enabled:
+# Can players rotate redstone?
+  redstone: true
+# Can players rotate terracotta?
+  terracotta: true
+# Can players rotate stairs?
+  stairs:
+    rotate: true
+    invert: true
+# Can players invert slabs?
+  slabs: true
+# Can players rotate armor stands?
+  armorstands: true
+# Can players rotate rails?
+  rails: true
+# Can players rotate beds?
+  beds: true
+# Can players rotate chain?
+  chain: true
+# Can players rotate trapdoors?
+  trapdoors:
+    rotate: true
+    invert: true
+# Can players rotate carved pumpkins?
+  carvedpumpkin: true
+# Can players rotate chests?
+  chests: true
+# Can players rotate fence gates?
+  fencegates: true
+# Can players rotate doors?
+  doors: true
+# Can players rotate workstations?
+  workstations: true
+# Can players rotate end rods?
+  endrod: true
+# Can players rotate logs?
+  logs: true
+# Can players rotate heads?
+  heads: true
+# Still to do,  fixed double chests sortof, Bells
