@@ -22,7 +22,6 @@ import org.bukkit.block.data.Rail;
 import org.bukkit.block.data.Rail.Shape;
 import org.bukkit.block.data.type.Bed;
 import org.bukkit.block.data.type.Bed.Part;
-//import org.bukkit.block.data.type.Chain;
 import org.bukkit.block.data.type.Chest;
 import org.bukkit.block.data.type.Slab;
 import org.bukkit.block.data.type.Slab.Type;
@@ -46,11 +45,10 @@ import com.github.joelgodofwar.rw.RotationalWrench;
 import com.github.joelgodofwar.rw.util.Ansi;
 import com.github.joelgodofwar.rw.util.RotateHelper;
 import com.github.joelgodofwar.rw.util.Tags;
-import com.github.joelgodofwar.rw.util.Tags_116;
 import com.github.joelgodofwar.rw.util.YmlConfiguration;
 import com.google.common.collect.Lists;
 
-public class RW_1_16_R2 implements Listener{
+public class RW_1_14_R1 implements Listener{
 	/**
     1.8		1_8_R1		1.8.3	1_8_R2
 	1.8.8 	1_8_R3
@@ -78,9 +76,9 @@ public class RW_1_16_R2 implements Listener{
 	boolean colorful_console = true;
 	boolean UpdateAvailable =	false;
 	public final ItemStack wrench = new ItemStack(Material.CARROT_ON_A_STICK, 1);
-	boolean v1_16_R2 = false;
+	boolean v1_14_R = false;
 	
-	public RW_1_16_R2(RotationalWrench plugin){
+	public RW_1_14_R1(RotationalWrench plugin){
 		this.config = plugin.config;
 		//wrench = plugin.wrench;
 		this.plugin = plugin;
@@ -91,8 +89,8 @@ public class RW_1_16_R2 implements Listener{
         wrench.setItemMeta(meta);
         String packageName = plugin.getServer().getClass().getPackage().getName();
     	String version = packageName.substring(packageName.lastIndexOf('.') + 2);
-    	if( version.contains("1_16_R2") ){
-    		v1_16_R2 = true;
+    	if( version.contains("1_14_R") || version.contains("1_15_R") ){
+    		v1_14_R = true;
     	}
 	}
 	
@@ -123,13 +121,13 @@ public class RW_1_16_R2 implements Listener{
         if(  !event.getPlayer().isSneaking() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && event.getItem().equals(wrench) && 
         		( Tags.REDSTONE_COMPONENTS.isTagged(block.getType()) && config.getBoolean("enabled.redstone", true) || 
         				Tags.GLAZED_TERRACOTTA.isTagged(block.getType()) && config.getBoolean("enabled.terracotta", true) || 
-        				( Tags.STAIRS.isTagged(block.getType()) || Tags_116.STAIRS_116.isTagged(block.getType()) ) && config.getBoolean("enabled.stairs.rotate", true)  || 
-        				( Tags.FENCE_GATES.isTagged(block.getType()) || Tags_116.FENCE_GATES_116.isTagged(block.getType()) ) && config.getBoolean("enabled.fencegates", true) ||
-        				( Tags.DOORS.isTagged(block.getType()) || Tags_116.DOORS_116.isTagged(block.getType()) ) && config.getBoolean("enabled.doors", true) ||
+        				Tags.STAIRS.isTagged(block.getType()) && config.getBoolean("enabled.stairs.rotate", true)  || 
+        				Tags.FENCE_GATES.isTagged(block.getType()) && config.getBoolean("enabled.fencegates", true) ||
+        				Tags.DOORS.isTagged(block.getType()) && config.getBoolean("enabled.doors", true) ||
         				Tags.WORKSTATIONS.isTagged(block.getType()) && config.getBoolean("enabled.workstations", true) ||
         				Tags.CARVED_PUMPKIN.isTagged(block.getType()) && config.getBoolean("enabled.carvedpumpkin", true) ||
         				Tags.END_ROD.isTagged(block.getType()) && config.getBoolean("enabled.endrod", true) ||
-        				Tags.BELL.isTagged(block.getType()) && config.getBoolean("enabled.bell", true) ) ) {
+        				v1_14_R && Tags.BELL.isTagged(block.getType()) && config.getBoolean("enabled.bell", true) ) ) {
         	//if( event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && event.getItem().equals(wrench) ){
         		Directional state = (Directional) block.getBlockData(); // Directional state = (Directional) block.getBlockData();
                 int facing = faces.indexOf(state.getFacing());
@@ -380,7 +378,7 @@ public class RW_1_16_R2 implements Listener{
         
         /** Logs */
         if( event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && event.getItem().equals(wrench) && 
-        		(Tags.LOGS.isTagged(block.getType()) || Tags_116.LOGS_116.isTagged(block.getType()) ) && config.getBoolean("enabled.logs", true) ){
+        		Tags.LOGS.isTagged(block.getType()) && config.getBoolean("enabled.logs", true) ){
         	Orientable state = (Orientable) block.getBlockData(); // Directional state = (Directional) block.getBlockData();
             Axis axis = state.getAxis();
             Orientable log = ((Orientable) Material.getMaterial(block.getType().toString()).createBlockData());
@@ -401,7 +399,7 @@ public class RW_1_16_R2 implements Listener{
         
         /** Stairs */
         if( event.getPlayer().isSneaking() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && event.getItem().equals(wrench) && 
-        		( Tags.STAIRS.isTagged(block.getType()) || Tags_116.STAIRS_116.isTagged(block.getType()) ) && config.getBoolean("enabled.stairs.invert", true) ){
+        		Tags.STAIRS.isTagged(block.getType()) && config.getBoolean("enabled.stairs.invert", true) ){
         	BlockState state = block.getState();
         	Stairs stairs = (Stairs) state.getBlockData();
         	
@@ -421,11 +419,11 @@ public class RW_1_16_R2 implements Listener{
         }
         /** Slabs */
         if( event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && event.getItem().equals(wrench) && 
-        		( Tags.SLABS.isTagged(block.getType()) || Tags.SLABS_114.isTagged(block.getType()) || Tags_116.SLABS_116.isTagged(block.getType()) ) && config.getBoolean("enabled.slabs", true) ){
+        		( Tags.SLABS.isTagged(block.getType()) || Tags.SLABS_114.isTagged(block.getType())  ) && config.getBoolean("enabled.slabs", true) ){
         	BlockState state = block.getState();
         	Slab slab = (Slab) state.getBlockData();
 			Type type = slab.getType();
-			//log("type=" + type);
+			log("type=" + type);
 			switch(type){
 			case BOTTOM:
 				slab.setType(Type.TOP);
@@ -881,7 +879,7 @@ public class RW_1_16_R2 implements Listener{
         }
         
         /** Chain */
-        if( event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && event.getItem().equals(wrench) && 
+        /**if( event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && event.getItem().equals(wrench) && 
         		block.getType() == Material.CHAIN && config.getBoolean("enabled.chain", true) && v1_16_R2){
         	BlockState state = block.getState();
         	org.bukkit.block.data.type.Chain chain = (org.bukkit.block.data.type.Chain) state.getBlockData();
@@ -899,11 +897,11 @@ public class RW_1_16_R2 implements Listener{
         	}
         	state.setBlockData(chain);
             state.update(false, false);
-        }
+        }*/
         
         /** Trapdoors */
         if( event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && event.getItem().equals(wrench) && 
-        		( Tags.TRAPDOORS.isTagged(block.getType()) || Tags_116.TRAPDOORS_116.isTagged(block.getType()) )){
+        		Tags.TRAPDOORS.isTagged(block.getType())){
         	BlockState state = block.getState();
     		TrapDoor trapdoor = (TrapDoor) state.getBlockData();
     		BlockFace facing = trapdoor.getFacing();
@@ -961,7 +959,7 @@ public class RW_1_16_R2 implements Listener{
         	BlockState state = block.getState();
         	Rail rail = (Rail) block.getBlockData();
 			Shape shape = rail.getShape();
-			//log("shape=" + shape.toString());
+			log("shape=" + shape.toString());
 			switch(shape){
 			case ASCENDING_EAST:
 				if( event.getPlayer().isSneaking() ){
@@ -1083,7 +1081,7 @@ public class RW_1_16_R2 implements Listener{
         	Location loc = as.getLocation();
         	loc.setYaw(yaw);
 			as.teleport(loc);
-			//log("yaw=" + yaw);
+			log("yaw=" + yaw);
 
         }if( event.getPlayer().isSneaking() && event.getPlayer().getInventory().getItemInMainHand().equals(wrench)  
         		&& entity instanceof ArmorStand && config.getBoolean("enabled.armorstands", true) ){
@@ -1093,7 +1091,7 @@ public class RW_1_16_R2 implements Listener{
         	Location loc = as.getLocation();
         	loc.setYaw(yaw);
 			as.teleport(loc);
-			//log("yaw=" + yaw);
+			log("yaw=" + yaw);
         }
 	}
 	

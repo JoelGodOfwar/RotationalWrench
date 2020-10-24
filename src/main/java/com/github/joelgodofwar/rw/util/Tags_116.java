@@ -5,7 +5,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 
 @SuppressWarnings("deprecation")
-public class Tags {
+public class Tags_116 {
 	public static final Tag<Material> REDSTONE_COMPONENTS = new MaterialSetTag(NamespacedKey.randomKey(),
             Material.REPEATER,		Material.COMPARATOR,            Material.OBSERVER,
             Material.DISPENSER,     Material.DROPPER,	            Material.HOPPER,
@@ -32,6 +32,9 @@ public class Tags {
 			Material.STRIPPED_DARK_OAK_LOG,	Material.STRIPPED_JUNGLE_LOG,
 			Material.STRIPPED_SPRUCE_LOG
     ); // 1.13
+	public static final Tag<Material> LOGS_116 = new MaterialSetTag(NamespacedKey.randomKey(),
+		Material.CRIMSON_STEM,	 	Material.WARPED_STEM,	Material.STRIPPED_CRIMSON_STEM,	 	Material.STRIPPED_WARPED_STEM
+	); // 1.16
 	
 	public static final Tag<Material> WORKSTATIONS = new MaterialSetTag(NamespacedKey.randomKey(),
 			Material.BLAST_FURNACE, 	Material.SMOKER, 	
@@ -44,12 +47,18 @@ public class Tags {
 			Material.DARK_OAK_DOOR,	Material.JUNGLE_DOOR,
 			Material.SPRUCE_DOOR,	Material.IRON_DOOR
     ); // 1.13
+	public static final Tag<Material> DOORS_116 = new MaterialSetTag(NamespacedKey.randomKey(),
+		Material.CRIMSON_DOOR,	 	Material.WARPED_DOOR
+	); // 1.16
 	
 	public static final Tag<Material> FENCE_GATES = new MaterialSetTag(NamespacedKey.randomKey(),
 			Material.OAK_FENCE_GATE, 		Material.ACACIA_FENCE_GATE, 	Material.BIRCH_FENCE_GATE,
 			Material.DARK_OAK_FENCE_GATE,	Material.JUNGLE_FENCE_GATE,
 			Material.SPRUCE_FENCE_GATE
     ); // 1.13
+	public static final Tag<Material> FENCE_GATES_116 = new MaterialSetTag(NamespacedKey.randomKey(),
+		Material.CRIMSON_FENCE_GATE,	 	Material.WARPED_FENCE_GATE
+	); // 1.16
 	
 	public static final Tag<Material> CHESTS = new MaterialSetTag(NamespacedKey.randomKey(),
             Material.CHEST, Material.ENDER_CHEST, Material.TRAPPED_CHEST
@@ -80,6 +89,10 @@ public class Tags {
     	Material.DIORITE_STAIRS
     	
     ); // 1.13
+    public static final Tag<Material> STAIRS_116 = new MaterialSetTag(NamespacedKey.randomKey(),
+    	Material.BLACKSTONE_STAIRS,				Material.POLISHED_BLACKSTONE_STAIRS,	Material.POLISHED_BLACKSTONE_BRICK_STAIRS,
+    	Material.CRIMSON_STAIRS,				Material.WARPED_STAIRS
+    ); // 1.16
     
     public static final Tag<Material> SLABS = new MaterialSetTag(NamespacedKey.randomKey(),
     		Material.PURPUR_SLAB,					Material.OAK_SLAB,					Material.COBBLESTONE_SLAB,
@@ -97,6 +110,10 @@ public class Tags {
     public static final Tag<Material> SLABS_114 = new MaterialSetTag(NamespacedKey.randomKey(),
     		Material.SANDSTONE_SLAB,		Material.RED_SANDSTONE_SLAB
     ); // 1.14
+    public static final Tag<Material> SLABS_116 = new MaterialSetTag(NamespacedKey.randomKey(),
+    	Material.BLACKSTONE_SLAB,				Material.POLISHED_BLACKSTONE_SLAB,	Material.POLISHED_BLACKSTONE_BRICK_SLAB,
+    	Material.CRIMSON_SLAB,					Material.WARPED_SLAB
+    ); // 1.16
     
     public static final Tag<Material> RAILS = new MaterialSetTag(NamespacedKey.randomKey(),
     		Material.RAIL,
@@ -119,4 +136,7 @@ public class Tags {
     		Material.BIRCH_TRAPDOOR,	Material.JUNGLE_TRAPDOOR,	Material.ACACIA_TRAPDOOR,
     		Material.DARK_OAK_TRAPDOOR
     ); // 1.13
+    public static final Tag<Material> TRAPDOORS_116 = new MaterialSetTag(NamespacedKey.randomKey(),
+    		Material.CRIMSON_TRAPDOOR,	Material.WARPED_TRAPDOOR
+    ); // 1.16
 }
