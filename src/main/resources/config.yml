@@ -1,5 +1,5 @@
 # DO NOT CHANGE VERSION
-version: 1.0.3
+version: 1.0.4
 
 # change to false to stop auto-update-check
 auto_update_check: true
@@ -54,4 +54,6 @@ enabled:
   logs: true
 # Can players rotate heads?
   heads: true
-# Still to do,  fixed double chests sortof, Bells
+# Can players rotate bells?
+  bell: true
+# Still to do,  fixed double chests sortof
