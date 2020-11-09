@@ -30,7 +30,7 @@ public class UpdateChecker {
         project = projectID;
         oldVersion = plugin.getDescription().getVersion();
         try {
-        	checkURL = new URL(URLString + oldVersion.substring(0, 4) + URLFile);
+        	checkURL = new URL(URLString + URLFile);
         }catch(MalformedURLException e) {
             Bukkit.getLogger().warning(Ansi.RED + "Could not connect to update server.");
             //Bukkit.getPluginManager().disablePlugin(plugin);
