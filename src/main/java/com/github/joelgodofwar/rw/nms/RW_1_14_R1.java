@@ -20,10 +20,11 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Skull;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.Bisected.Half;
+//import org.bukkit.block.data.FaceAttachable.AttachedFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
-import org.bukkit.block.data.FaceAttachable;
 import org.bukkit.block.data.FaceAttachable.AttachedFace;
+//import org.bukkit.block.data.FaceAttachable;
 import org.bukkit.block.data.Orientable;
 import org.bukkit.block.data.Rail;
 import org.bukkit.block.data.Rail.Shape;
@@ -35,6 +36,8 @@ import org.bukkit.block.data.type.Lantern;
 import org.bukkit.block.data.type.Slab;
 import org.bukkit.block.data.type.Slab.Type;
 import org.bukkit.block.data.type.Stairs;
+import org.bukkit.block.data.type.Switch;
+import org.bukkit.block.data.type.Switch.Face;
 import org.bukkit.block.data.type.TrapDoor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -53,15 +56,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 import com.github.joelgodofwar.rw.RotationalWrench;
-import com.github.joelgodofwar.rw.util.Ansi;
 import com.github.joelgodofwar.rw.util.RotateHelper;
 import com.github.joelgodofwar.rw.util.StrUtils;
-import com.github.joelgodofwar.rw.util.Tags_116;
+import com.github.joelgodofwar.rw.util.Tags;
 import com.github.joelgodofwar.rw.util.YmlConfiguration;
 import com.google.common.collect.Lists;
 
 @SuppressWarnings("deprecation")
-public class RW_1_16_R2 implements Listener{
+public class RW_1_14_R1 implements Listener{
 	/**
     1.8		1_8_R1		1.8.3	1_8_R2
 	1.8.8 	1_8_R3
@@ -86,13 +88,13 @@ public class RW_1_16_R2 implements Listener{
 	YamlConfiguration oldconfig = new YamlConfiguration();
 	static PluginDescriptionFile pdfFile;
 	static String datafolder;
-	boolean colorful_console;
+	//boolean colorful_console = true;
 	boolean UpdateAvailable =	false;
 	public final ItemStack wrench = new ItemStack(Material.CARROT_ON_A_STICK, 1);
-	boolean v1_16_R2 = true;
+	boolean v1_15_R = false;
 	public HashMap<UUID, Long> spamfilter =  new HashMap<UUID, Long>();
 	
-	public RW_1_16_R2(RotationalWrench plugin){
+	public RW_1_14_R1(RotationalWrench plugin){
 		this.config = plugin.config;
 		//wrench = plugin.wrench;
 		this.plugin = plugin;
@@ -103,8 +105,8 @@ public class RW_1_16_R2 implements Listener{
         wrench.setItemMeta(meta);
         String packageName = plugin.getServer().getClass().getPackage().getName();
     	String version = packageName.substring(packageName.lastIndexOf('.') + 2);
-    	if( version.contains("1_16_R1") ){
-    		v1_16_R2 = false;
+    	if( version.contains("1_15_R") ){
+    		v1_15_R = true;
     	}
     	try {
 			config.load(new File(plugin.getDataFolder(), "config.yml"));
@@ -112,8 +114,6 @@ public class RW_1_16_R2 implements Listener{
 			logWarn("Could not load config.yml");
 			e1.printStackTrace();
 		}
-    	colorful_console = plugin.getConfig().getBoolean("colorful_console", true);
-    	//colorful_console = plugin.getConfig().getBoolean("colorful_console", true)
 	}
 	
 	public boolean isDoubleChest(Block block){
@@ -135,7 +135,7 @@ public class RW_1_16_R2 implements Listener{
 	@SuppressWarnings({ "unused" })
 	@EventHandler
     public void onBlockClick(PlayerInteractEvent event) { // TODO: Top
-        Block block = event.getClickedBlock();
+		Block block = event.getClickedBlock();
         boolean onblacklist = false;
         onblacklist = StrUtils.stringContains(config.getString("blacklist", ""),event.getPlayer().getWorld().getName());
         
@@ -167,24 +167,23 @@ public class RW_1_16_R2 implements Listener{
 				isSpam = false;
 			}
 		}
-        
+        //log("block=" + block.getType());
         /** Redstone, Terracotta, Stairs */
         if( !isSpam && !event.getPlayer().isSneaking() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
-        		event.getItem().equals(wrench) && !onblacklist && 
-        		( Tags_116.REDSTONE_COMPONENTS.isTagged(block.getType()) && config.getBoolean("enabled.redstone", true) || 
-        				Tags_116.GLAZED_TERRACOTTA.isTagged(block.getType()) && config.getBoolean("enabled.terracotta", true) || 
-        				//Tags_116.STAIRS.isTagged(block.getType()) && config.getBoolean("enabled.stairs.rotate", true)  ||
-        				Tags_116.FENCE_GATES.isTagged(block.getType()) && config.getBoolean("enabled.fencegates", true) ||
-        				Tags_116.DOORS.isTagged(block.getType()) && config.getBoolean("enabled.doors", true) ||
-        				Tags_116.WORKSTATIONS.isTagged(block.getType()) && config.getBoolean("enabled.workstations", true) ||
-        				Tags_116.CARVED_PUMPKIN.isTagged(block.getType()) && config.getBoolean("enabled.carvedpumpkin", true) ||
-        				Tags_116.END_ROD.isTagged(block.getType()) && config.getBoolean("enabled.endrod", true) ||
-        				Tags_116.BELL.isTagged(block.getType()) && config.getBoolean("enabled.bell", true) ||
-        				Tags_116.ANVIL.isTagged(block.getType()) && config.getBoolean("enabled.anvil", true) ||
-        				Tags_116.CAMPFIRES.isTagged(block.getType()) && config.getBoolean("enabled.campfires", true) ||
-        				Tags_116.SHULKER.isTagged(block.getType()) && config.getBoolean("enabled.shulker", true) ||
-        				Tags_116.BEE.isTagged(block.getType()) && config.getBoolean("enabled.bee", true) ||
-                		Tags_116.HEADS2.isTagged(block.getType()) && config.getBoolean("enabled.signs", true) ) ){
+        		event.getItem().equals(wrench) && !onblacklist &&
+        		( Tags.REDSTONE_COMPONENTS.isTagged(block.getType()) && config.getBoolean("enabled.redstone", true) || 
+        				Tags.GLAZED_TERRACOTTA.isTagged(block.getType()) && config.getBoolean("enabled.terracotta", true) || 
+        				//Tags.STAIRS.isTagged(block.getType()) && config.getBoolean("enabled.stairs.rotate", true)  || 
+        				Tags.FENCE_GATES.isTagged(block.getType()) && config.getBoolean("enabled.fencegates", true) ||
+        				Tags.DOORS.isTagged(block.getType()) && config.getBoolean("enabled.doors", true) ||
+        				Tags.WORKSTATIONS.isTagged(block.getType()) && config.getBoolean("enabled.workstations", true) ||
+        				Tags.CARVED_PUMPKIN.isTagged(block.getType()) && config.getBoolean("enabled.carvedpumpkin", true) ||
+        				Tags.END_ROD.isTagged(block.getType()) && config.getBoolean("enabled.endrod", true) ||
+        				Tags.BELL.isTagged(block.getType()) && config.getBoolean("enabled.bell", true) ||
+        				Tags.ANVIL.isTagged(block.getType()) && config.getBoolean("enabled.anvil", true) ||
+        				Tags.CAMPFIRES.isTagged(block.getType()) && config.getBoolean("enabled.campfires", true) ||
+        				Tags.SHULKER.isTagged(block.getType()) && config.getBoolean("enabled.shulker", true) ||
+                		Tags.HEADS2.isTagged(block.getType()) && config.getBoolean("enabled.signs", true) ) ) {
         	//if( event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && event.getItem().equals(wrench) ){
         		Directional state = (Directional) block.getBlockData(); // Directional state = (Directional) block.getBlockData();
                 int facing = faces.indexOf(state.getFacing());
@@ -196,18 +195,15 @@ public class RW_1_16_R2 implements Listener{
                     facing = faces.indexOf(nextFace);
                     i++;
                 }
-                event.setCancelled(true);
                 event.setUseInteractedBlock(Result.DENY);
                 state.setFacing(nextFace);
                 block.setBlockData(state);
-                BlockState state2 = block.getState();
-                state2.update(true, true);
                 //log("facing=" + facing);
                 //log("nextFace=" + nextFace.toString());
             //}
         }else if( !isSpam && event.getPlayer().isSneaking() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
         		event.getItem().equals(wrench) && !onblacklist &&
-        		Tags_116.REDSTONE_COMPONENTS2.isTagged(block.getType()) && config.getBoolean("enabled.redstone", true) ){
+        		Tags.REDSTONE_COMPONENTS2.isTagged(block.getType()) && config.getBoolean("enabled.redstone", true) ){
         	
 	        	Directional state = (Directional) block.getBlockData(); // Directional state = (Directional) block.getBlockData();
 	            int facing = faces.indexOf(state.getFacing());
@@ -226,11 +222,35 @@ public class RW_1_16_R2 implements Listener{
 	            state2.update(true, true);
         }
         
+        if(v1_15_R){
+	        if( !isSpam && !event.getPlayer().isSneaking() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
+	        		event.getItem().equals(wrench) && !onblacklist &&
+	        		( com.github.joelgodofwar.rw.util.Tags_115.BEE.isTagged(block.getType()) && config.getBoolean("enabled.bee", true) ) ) {
+	        	//if( event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && event.getItem().equals(wrench) ){
+	        		Directional state = (Directional) block.getBlockData(); // Directional state = (Directional) block.getBlockData();
+	                int facing = faces.indexOf(state.getFacing());
+	                BlockFace nextFace = null;
+	                int i = 0;
+	                while (nextFace == null || !state.getFaces().contains(nextFace)) {
+	                    if (i >= 6) throw new IllegalStateException("Infinite loop detected");
+	                    nextFace = event.getPlayer().isSneaking() ? facing - 1 < 0 ? faces.get(facing + 6 - 1) : faces.get(facing - 1) : faces.get((facing + 1) % 6); // 
+	                    facing = faces.indexOf(nextFace);
+	                    i++;
+	                }
+	                event.setUseInteractedBlock(Result.DENY);
+	                state.setFacing(nextFace);
+	                block.setBlockData(state);
+	                //log("facing=" + facing);
+	                //log("nextFace=" + nextFace.toString());
+	            //}
+	        }
+        }
+        
         /** Lantern */ // TODO: Lantern
         if( !isSpam && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
         		event.getItem().equals(wrench) && !onblacklist &&  
-        		Tags_116.LANTERNS.isTagged(block.getType()) && config.getBoolean("enabled.lantern", true) ){ 
-        	//Tags_116.WORKSTATIONS.isTagged(block.getType()) && config.getBoolean("enabled.workstations", true)
+        		Tags.LANTERNS.isTagged(block.getType()) && config.getBoolean("enabled.lantern", true) ){ 
+        	//Tags.WORKSTATIONS.isTagged(block.getType()) && config.getBoolean("enabled.workstations", true)
         	BlockState state = block.getState();
         	Lantern lantern = (Lantern) state.getBlockData();
         	boolean hanging = lantern.isHanging();
@@ -243,12 +263,12 @@ public class RW_1_16_R2 implements Listener{
 	        if(!hanging && 
 	        		lanternValidBlock(world, X, Y+1, Z, Half.BOTTOM) ){ // lanternValidBlock(world, X, Y+1, Z, Half.BOTTOM)
 	        	lantern.setHanging(true);
-	        	state.setBlockData(lantern);
+	        	state.setBlockData((BlockData) lantern);
 	        	//log("Lantern set hanging");
 	        }else if(hanging && 
 	        		lanternValidBlock(world, X, Y-1, Z, Half.TOP) ){
 	        	lantern.setHanging(false);
-	        	state.setBlockData(lantern);
+	        	state.setBlockData((BlockData) lantern);
 	        	//log("Lantern set not hanging");
 	        }
 	        state.update(true, true);
@@ -257,8 +277,8 @@ public class RW_1_16_R2 implements Listener{
         /** Wall Sign */ // TODO: Wall Sign
         if( !isSpam && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
         		event.getItem().equals(wrench) && !onblacklist &&  
-        		Tags_116.SIGNS2.isTagged(block.getType()) && config.getBoolean("enabled.signs", true) ){ 
-        	//Tags_116.WORKSTATIONS.isTagged(block.getType()) && config.getBoolean("enabled.workstations", true)
+        		Tags.SIGNS2.isTagged(block.getType()) && config.getBoolean("enabled.signs", true) ){ 
+        	//Tags.WORKSTATIONS.isTagged(block.getType()) && config.getBoolean("enabled.workstations", true)
         	BlockState state = block.getState();
         	Directional face = (Directional) state.getBlockData();
         	BlockFace facing = face.getFacing();
@@ -273,7 +293,7 @@ public class RW_1_16_R2 implements Listener{
 			case NORTH:
 				/**log("empty=" + !world.getBlockAt(X,Y-1,Z).isEmpty());
 				log("solid=" + world.getBlockAt(X,Y-1,Z).getType().isSolid());
-				log("tagged=" + !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X-1,Y,Z).getType()));*/
+				log("tagged=" + !Tags.NO_BUTTONS.isTagged(world.getBlockAt(X-1,Y,Z).getType()));*/
 				if( signValidBlock(world, X-1, Y, Z, BlockFace.EAST) ){ // North
 					
 		            blockFace = BlockFace.EAST;
@@ -376,7 +396,7 @@ public class RW_1_16_R2 implements Listener{
         if( !isSpam && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
         		event.getItem().equals(wrench) && !onblacklist &&  
         		block.getType() == Material.LADDER && config.getBoolean("enabled.ladder", true) ){ 
-        	//Tags_116.WORKSTATIONS.isTagged(block.getType()) && config.getBoolean("enabled.workstations", true)
+        	//Tags.WORKSTATIONS.isTagged(block.getType()) && config.getBoolean("enabled.workstations", true)
         	BlockState state = block.getState();
         	Directional face = (Directional) state.getBlockData();
         	BlockFace facing = face.getFacing();
@@ -391,7 +411,7 @@ public class RW_1_16_R2 implements Listener{
 			case NORTH:
 				/**log("empty=" + !world.getBlockAt(X,Y-1,Z).isEmpty());
 				log("solid=" + world.getBlockAt(X,Y-1,Z).getType().isSolid());
-				log("tagged=" + !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X-1,Y,Z).getType()));*/
+				log("tagged=" + !Tags.NO_BUTTONS.isTagged(world.getBlockAt(X-1,Y,Z).getType()));*/
 				if( torchValidBlock(world, X-1, Y, Z, BlockFace.EAST) ){ // North
 					
 		            blockFace = BlockFace.EAST;
@@ -493,42 +513,9 @@ public class RW_1_16_R2 implements Listener{
         /** Torches */ // TODO: Torches
         if( !isSpam && event.getPlayer().isSneaking() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
         		event.getItem().equals(wrench) && !onblacklist && 
-        	  ( Tags_116.TORCH.isTagged(block.getType()) && config.getBoolean("enabled.torch", true) ||
-        		Tags_116.TORCH2.isTagged(block.getType()) && config.getBoolean("enabled.torch", true) ) ){
+        	    Tags.TORCH.isTagged(block.getType()) && config.getBoolean("enabled.torch", true) ){
         	
-        	if(block.getType().equals(Material.SOUL_TORCH)){
-        		BlockFace blockFace = null;
-        		BlockData data = Material.SOUL_WALL_TORCH.createBlockData();
-        		Directional state = (Directional) data;
-        		Location loc = block.getLocation();
-            	World world = loc.getWorld();
-    	        int X = loc.getBlockX();
-    	        int Y = loc.getBlockY();
-    	        int Z = loc.getBlockZ();
-
-        		if ( torchValidBlock(world, X, Y, Z-1, BlockFace.SOUTH) ){ // East
-        			
-		            blockFace=BlockFace.SOUTH; //log("south error");
-		        }else if ( torchValidBlock(world, X+1, Y, Z, BlockFace.WEST) ){ // South
-		        	
-		            blockFace = BlockFace.WEST; //log("west error");
-		        }else if ( torchValidBlock(world, X, Y, Z+1, BlockFace.NORTH) ){ // West
-		        	
-		            blockFace=BlockFace.NORTH; //log("north error");
-		        }else if ( torchValidBlock(world, X-1, Y, Z, BlockFace.EAST) ){ // South
-		        	
-		            blockFace = BlockFace.EAST; //log("west error");
-		        }else {
-		            return;
-		        }
-        		state.setFacing(blockFace);
-        		block.setBlockData(state);
-        		return;
-        	}else if(block.getType().equals(Material.SOUL_WALL_TORCH) && !block.getWorld().getBlockAt(block.getX(), (block.getY()-1), block.getZ()).isEmpty() && SameHalf(block.getWorld(), block.getX(), (block.getY()-1), block.getZ(), Half.TOP) ){
-        		log("y=" + block.getY() + " y-1=" + (block.getY()-1));
-        		block.setType(Material.SOUL_TORCH);
-                return;
-        	}else if(block.getType().equals(Material.TORCH)){
+        	if(block.getType().equals(Material.TORCH)){
         		BlockFace blockFace = null;
         		BlockData data = Material.WALL_TORCH.createBlockData();
         		Directional state = (Directional) data;
@@ -556,7 +543,7 @@ public class RW_1_16_R2 implements Listener{
         		state.setFacing(blockFace);
         		block.setBlockData(state);
         		return;
-        	}else if(block.getType().equals(Material.WALL_TORCH) && !block.getWorld().getBlockAt(block.getX(), (block.getY()-1), block.getZ()).isEmpty() && SameHalf(block.getWorld(), block.getX(), (block.getY()-1), block.getZ(), Half.TOP) ){
+        	}else if(block.getType().equals(Material.WALL_TORCH) && !block.getWorld().getBlockAt(block.getX(), (block.getY()-1), block.getZ()).isEmpty() && SameHalf(block.getWorld(), block.getX(), block.getY()-1, block.getZ(), Half.TOP) ){
         		block.setType(Material.TORCH);
                 return;
         	}else if(block.getType().equals(Material.REDSTONE_TORCH)){
@@ -587,18 +574,17 @@ public class RW_1_16_R2 implements Listener{
         		state.setFacing(blockFace);
         		block.setBlockData(state);
         		return;
-        	}else if(block.getType().equals(Material.REDSTONE_WALL_TORCH) && !block.getWorld().getBlockAt(block.getX(), (block.getY()-1), block.getZ()).isEmpty() && SameHalf(block.getWorld(), block.getX(), (block.getY()-1), block.getZ(), Half.TOP) ){
+        	}else if(block.getType().equals(Material.REDSTONE_WALL_TORCH) && !block.getWorld().getBlockAt(block.getX(), (block.getY()-1), block.getZ()).isEmpty() && SameHalf(block.getWorld(), block.getX(), block.getY()-1, block.getZ(), Half.TOP) ){
         		block.setType(Material.REDSTONE_TORCH);
                 return;
         	}
         	
         }else if( !isSpam && !event.getPlayer().isSneaking() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
         		event.getItem().equals(wrench) && !onblacklist && 
-        		( Tags_116.TORCH.isTagged(block.getType()) && config.getBoolean("enabled.torch", true) ||
-                  Tags_116.TORCH2.isTagged(block.getType()) && config.getBoolean("enabled.torch", true) ) ){
+        		Tags.TORCH.isTagged(block.getType()) && config.getBoolean("enabled.torch", true) ){
         	event.setUseInteractedBlock(Result.DENY);
         	//log("Material=" + block.getType().toString());
-        	if(block.getType().equals(Material.SOUL_TORCH)||block.getType().equals(Material.TORCH)||block.getType().equals(Material.REDSTONE_TORCH)){return;}
+        	if(block.getType().equals(Material.TORCH)||block.getType().equals(Material.REDSTONE_TORCH)){return;}
         	Directional state = (Directional) block.getBlockData();
         	BlockFace facing = state.getFacing();
         	BlockFace blockFace = null;
@@ -612,19 +598,19 @@ public class RW_1_16_R2 implements Listener{
 	        int Y2 = Y;
 	        int Z2 = Z;
 	        //block.getType().isSolid()
-	        /**log("X-1=" + world.getBlockAt(X-1,Y,Z).getType().toString() + " solid=" + world.getBlockAt(X-1,Y,Z).getType().isSolid() + " tagged=" + Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X-1,Y,Z).getType()) ); // DISPENSER	East
-	        log("Z-1=" + world.getBlockAt(X,Y,Z-1).getType().toString() + " solid=" + world.getBlockAt(X,Y,Z-1).getType().isSolid() + " tagged=" + Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y,Z-1).getType()) ); // Hopper		South
-	        log("X+1=" + world.getBlockAt(X+1,Y,Z).getType().toString() + " solid=" + world.getBlockAt(X+1,Y,Z).getType().isSolid() + " tagged=" + Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X+1,Y,Z).getType()) ); // Air			West
-	        log("Z+1=" + world.getBlockAt(X,Y,Z+1).getType().toString() + " solid=" + world.getBlockAt(X,Y,Z+1).getType().isSolid() + " tagged=" + Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y,Z+1).getType()) ); // stone 		North
-	        log("Y-1=" + world.getBlockAt(X,Y-1,Z).getType().toString() + " solid=" + world.getBlockAt(X,Y-1,Z).getType().isSolid() + " tagged=" + Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y-1,Z).getType()) ); // chest		Up
-	        //log("block6=" + world.getBlockAt(X,Y+1,Z).getType().toString() + " solid=" + world.getBlockAt(X,Y+1,Z).getType().isSolid() + " tagged=" + Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y+1,Z).getType()) ); // wc			Down*/
-	        //log("tagged=" + Tags_116.NO_BUTTONS.isTagged(block.getType()));
+	        /**log("X-1=" + world.getBlockAt(X-1,Y,Z).getType().toString() + " solid=" + world.getBlockAt(X-1,Y,Z).getType().isSolid() + " tagged=" + Tags.NO_BUTTONS.isTagged(world.getBlockAt(X-1,Y,Z).getType()) ); // DISPENSER	East
+	        log("Z-1=" + world.getBlockAt(X,Y,Z-1).getType().toString() + " solid=" + world.getBlockAt(X,Y,Z-1).getType().isSolid() + " tagged=" + Tags.NO_BUTTONS.isTagged(world.getBlockAt(X,Y,Z-1).getType()) ); // Hopper		South
+	        log("X+1=" + world.getBlockAt(X+1,Y,Z).getType().toString() + " solid=" + world.getBlockAt(X+1,Y,Z).getType().isSolid() + " tagged=" + Tags.NO_BUTTONS.isTagged(world.getBlockAt(X+1,Y,Z).getType()) ); // Air			West
+	        log("Z+1=" + world.getBlockAt(X,Y,Z+1).getType().toString() + " solid=" + world.getBlockAt(X,Y,Z+1).getType().isSolid() + " tagged=" + Tags.NO_BUTTONS.isTagged(world.getBlockAt(X,Y,Z+1).getType()) ); // stone 		North
+	        log("Y-1=" + world.getBlockAt(X,Y-1,Z).getType().toString() + " solid=" + world.getBlockAt(X,Y-1,Z).getType().isSolid() + " tagged=" + Tags.NO_BUTTONS.isTagged(world.getBlockAt(X,Y-1,Z).getType()) ); // chest		Up
+	        //log("block6=" + world.getBlockAt(X,Y+1,Z).getType().toString() + " solid=" + world.getBlockAt(X,Y+1,Z).getType().isSolid() + " tagged=" + Tags.NO_BUTTONS.isTagged(world.getBlockAt(X,Y+1,Z).getType()) ); // wc			Down*/
+	        //log("tagged=" + Tags.NO_BUTTONS.isTagged(block.getType()));
 	        
         	switch(facing){
 			case NORTH:
 				/**log("empty=" + !world.getBlockAt(X,Y-1,Z).isEmpty());
 				log("solid=" + world.getBlockAt(X,Y-1,Z).getType().isSolid());
-				log("tagged=" + !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X-1,Y,Z).getType()));*/
+				log("tagged=" + !Tags.NO_BUTTONS.isTagged(world.getBlockAt(X-1,Y,Z).getType()));*/
 				if( torchValidBlock(world, X-1, Y, Z, BlockFace.EAST) ){ // North
 		            blockFace = BlockFace.EAST;
 				}else if ( torchValidBlock(world, X, Y, Z-1, BlockFace.SOUTH) ){ // East
@@ -705,17 +691,14 @@ public class RW_1_16_R2 implements Listener{
         /** Buttons */ // TODO: Buttons
         if( !isSpam && !event.getPlayer().isSneaking() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
         		event.getItem().equals(wrench) && !onblacklist && 
-        		Tags_116.BUTTONS.isTagged(block.getType()) && config.getBoolean("enabled.buttons", true) ){
+        		Tags.BUTTONS.isTagged(block.getType()) && config.getBoolean("enabled.buttons", true) ){
         	event.setUseInteractedBlock(Result.DENY);
         	BlockState state = block.getState();
-        	
         	BlockData data = state.getBlockData(); // Intersection type of two interfaces
         	BlockFace facing = ((Directional) data).getFacing();
-        	AttachedFace aface = ((FaceAttachable) data).getAttachedFace();
+        	Face aface = ((Switch) data).getFace();
         	
-        	/**log("facing=" + facing);
-        	log("aface=" + aface); //*/
-        	AttachedFace attachedFace = null;
+        	Face attachedFace = null;
         	BlockFace blockFace = null;
         	Location loc = block.getLocation();
         	World world = loc.getWorld();
@@ -727,61 +710,61 @@ public class RW_1_16_R2 implements Listener{
 	        int Y2 = Y;
 	        int Z2 = Z;
 	        //block.getType().isSolid()
-	        /**log("block1=" + world.getBlockAt(X-1,Y,Z).getType().toString() + " solid=" + world.getBlockAt(X-1,Y,Z).getType().isSolid() + " tagged=" + Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X-1,Y,Z).getType()) ); // DISPENSER	East
-	        log("block2=" + world.getBlockAt(X,Y,Z-1).getType().toString() + " solid=" + world.getBlockAt(X,Y,Z-1).getType().isSolid() + " tagged=" + Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y,Z-1).getType()) ); // Hopper		South
-	        log("block3=" + world.getBlockAt(X+1,Y,Z).getType().toString() + " solid=" + world.getBlockAt(X+1,Y,Z).getType().isSolid() + " tagged=" + Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X+1,Y,Z).getType()) ); // Air			West
-	        log("block4=" + world.getBlockAt(X,Y,Z+1).getType().toString() + " solid=" + world.getBlockAt(X,Y,Z+1).getType().isSolid() + " tagged=" + Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y,Z+1).getType()) ); // stone 		North
-	        log("block5=" + world.getBlockAt(X,Y-1,Z).getType().toString() + " solid=" + world.getBlockAt(X,Y-1,Z).getType().isSolid() + " tagged=" + Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y-1,Z).getType()) ); // chest		Up
-	        log("block6=" + world.getBlockAt(X,Y+1,Z).getType().toString() + " solid=" + world.getBlockAt(X,Y+1,Z).getType().isSolid() + " tagged=" + Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y+1,Z).getType()) ); // wc			Down*/
-	        //log("tagged=" + Tags_116.NO_BUTTONS.isTagged(block.getType()));
+	        /**log("block1=" + world.getBlockAt(X-1,Y,Z).getType().toString() + " solid=" + world.getBlockAt(X-1,Y,Z).getType().isSolid() + " tagged=" + Tags.NO_BUTTONS.isTagged(world.getBlockAt(X-1,Y,Z).getType()) ); // DISPENSER	East
+	        log("block2=" + world.getBlockAt(X,Y,Z-1).getType().toString() + " solid=" + world.getBlockAt(X,Y,Z-1).getType().isSolid() + " tagged=" + Tags.NO_BUTTONS.isTagged(world.getBlockAt(X,Y,Z-1).getType()) ); // Hopper		South
+	        log("block3=" + world.getBlockAt(X+1,Y,Z).getType().toString() + " solid=" + world.getBlockAt(X+1,Y,Z).getType().isSolid() + " tagged=" + Tags.NO_BUTTONS.isTagged(world.getBlockAt(X+1,Y,Z).getType()) ); // Air			West
+	        log("block4=" + world.getBlockAt(X,Y,Z+1).getType().toString() + " solid=" + world.getBlockAt(X,Y,Z+1).getType().isSolid() + " tagged=" + Tags.NO_BUTTONS.isTagged(world.getBlockAt(X,Y,Z+1).getType()) ); // stone 		North
+	        log("block5=" + world.getBlockAt(X,Y-1,Z).getType().toString() + " solid=" + world.getBlockAt(X,Y-1,Z).getType().isSolid() + " tagged=" + Tags.NO_BUTTONS.isTagged(world.getBlockAt(X,Y-1,Z).getType()) ); // chest		Up
+	        log("block6=" + world.getBlockAt(X,Y+1,Z).getType().toString() + " solid=" + world.getBlockAt(X,Y+1,Z).getType().isSolid() + " tagged=" + Tags.NO_BUTTONS.isTagged(world.getBlockAt(X,Y+1,Z).getType()) ); // wc			Down*/
+	        //log("tagged=" + Tags.NO_BUTTONS.isTagged(block.getType()));
 	        switch(aface){
-	        case CEILING:
+			case CEILING:
 	        	if ( torchValidBlock(world, X, Y, Z+1, BlockFace.NORTH) ){ // West
 		            blockFace=BlockFace.NORTH;
-		            attachedFace = AttachedFace.WALL;
+		            attachedFace = Face.WALL;
 		        }else if( torchValidBlock(world, X-1, Y, Z, BlockFace.EAST) ){ // North
 		            blockFace = BlockFace.EAST;
-		            attachedFace = AttachedFace.WALL;
+		            attachedFace = Face.WALL;
 				}else if ( torchValidBlock(world, X, Y, Z-1, BlockFace.SOUTH) ){ // East
 		            blockFace=BlockFace.SOUTH;
-		            attachedFace = AttachedFace.WALL;
+		            attachedFace = Face.WALL;
 		        }else if ( torchValidBlock(world, X+1, Y, Z, BlockFace.WEST) ){ // South
 		            blockFace = BlockFace.WEST;
-		            attachedFace = AttachedFace.WALL;
+		            attachedFace = Face.WALL;
 		        }else if ( buttonValidBlock(world, X, Y-1, Z, Half.TOP) ){ // Up
 		            blockFace = facing; // floor
-		            attachedFace = AttachedFace.FLOOR;
+		            attachedFace = Face.FLOOR;
 		        }else if ( buttonValidBlock(world, X, Y+1, Z, Half.BOTTOM) ){ // Down
 		        	blockFace = facing; // ceiling
-		            attachedFace = AttachedFace.CEILING;
+		            attachedFace = Face.CEILING;
 		        }else {
 		        	//log("north error");
 		            return;
 		        }
-	        	break;
-	        case FLOOR:
+				break;
+			case FLOOR:
 	        	if ( buttonValidBlock(world, X, Y+1, Z, Half.BOTTOM) ){ // Down
 		        	blockFace = facing; // ceiling
-		            attachedFace = AttachedFace.CEILING;
+		            attachedFace = Face.CEILING;
 		        }else if ( torchValidBlock(world, X, Y, Z+1, BlockFace.NORTH) ){ // West
 		            blockFace=BlockFace.NORTH;
-		            attachedFace = AttachedFace.WALL;
+		            attachedFace = Face.WALL;
 		        }else if( torchValidBlock(world, X-1, Y, Z, BlockFace.EAST) ){ // North
 		            blockFace = BlockFace.EAST;
-		            attachedFace = AttachedFace.WALL;
+		            attachedFace = Face.WALL;
 				}else if ( torchValidBlock(world, X, Y, Z-1, BlockFace.SOUTH) ){ // East
 		            blockFace=BlockFace.SOUTH;
-		            attachedFace = AttachedFace.WALL;
+		            attachedFace = Face.WALL;
 		        }else if ( torchValidBlock(world, X+1, Y, Z, BlockFace.WEST) ){ // South
 		            blockFace = BlockFace.WEST;
-		            attachedFace = AttachedFace.WALL;
+		            attachedFace = Face.WALL;
 		        }else {
 		        	//log("north error");
 		            return;
 		        }
-	        	break;
-	        case WALL:
-	        	switch(facing){
+				break;
+			case WALL:
+				switch(facing){
 				case NORTH:
 					/**log("empty=" + !world.getBlockAt(X,Y-1,Z).isEmpty());
 					log("solid=" + world.getBlockAt(X,Y-1,Z).getType().isSolid());
@@ -794,10 +777,10 @@ public class RW_1_16_R2 implements Listener{
 			            blockFace = BlockFace.WEST;
 			        }else if ( buttonValidBlock(world, X, Y-1, Z, Half.TOP) ){ // Up
 			            blockFace = facing; // floor
-			            attachedFace = AttachedFace.FLOOR;
+			            attachedFace = Face.FLOOR;
 			        }else if ( buttonValidBlock(world, X, Y+1, Z, Half.BOTTOM) ){ // Down
 			        	blockFace = facing; // ceiling
-			            attachedFace = AttachedFace.CEILING;
+			            attachedFace = Face.CEILING;
 			        }else if ( torchValidBlock(world, X, Y, Z+1, BlockFace.NORTH) ){ // West
 			            blockFace=BlockFace.NORTH;
 			        }else {
@@ -813,10 +796,10 @@ public class RW_1_16_R2 implements Listener{
 			            blockFace = BlockFace.WEST;
 			        }else if ( buttonValidBlock(world, X, Y-1, Z, Half.TOP) ){ // Up
 			        	blockFace = facing; // floor
-			            attachedFace = AttachedFace.FLOOR;
+			            attachedFace = Face.FLOOR;
 			        }else if ( buttonValidBlock(world, X, Y+1, Z, Half.BOTTOM) ){ // Down
 			        	blockFace = facing; // ceiling
-			            attachedFace = AttachedFace.CEILING;
+			            attachedFace = Face.CEILING;
 			        }else if ( torchValidBlock(world, X, Y, Z+1, BlockFace.NORTH) ){ // West
 			            blockFace=BlockFace.NORTH;
 			        }else if( torchValidBlock(world, X-1, Y, Z, BlockFace.EAST) ){ // North
@@ -830,10 +813,10 @@ public class RW_1_16_R2 implements Listener{
 			            blockFace = BlockFace.WEST;
 			        }else if ( buttonValidBlock(world, X, Y-1, Z, Half.TOP) ){ // Up
 			        	blockFace = facing; // floor
-			            attachedFace = AttachedFace.FLOOR;
+			            attachedFace = Face.FLOOR;
 			        }else if ( buttonValidBlock(world, X, Y+1, Z, Half.BOTTOM) ){ // Down
 			        	blockFace = facing; // ceiling
-			            attachedFace = AttachedFace.CEILING;
+			            attachedFace = Face.CEILING;
 			        }else if ( torchValidBlock(world, X, Y, Z+1, BlockFace.NORTH) ){ // West
 			            blockFace=BlockFace.NORTH;
 			        }else if( torchValidBlock(world, X-1, Y, Z, BlockFace.EAST) ){ // North
@@ -847,10 +830,10 @@ public class RW_1_16_R2 implements Listener{
 				case WEST:
 					if ( buttonValidBlock(world, X, Y-1, Z, Half.TOP) ){ // Up
 						blockFace = facing; // floor
-			            attachedFace = AttachedFace.FLOOR;
+			            attachedFace = Face.FLOOR;
 			        }else if ( buttonValidBlock(world, X, Y+1, Z, Half.BOTTOM) ){ // Down
 			        	blockFace = facing; // ceiling
-			            attachedFace = AttachedFace.CEILING;
+			            attachedFace = Face.CEILING;
 			        }else if ( torchValidBlock(world, X, Y, Z+1, BlockFace.NORTH) ){ // West
 			            blockFace=BlockFace.NORTH;
 			        }else if( torchValidBlock(world, X-1, Y, Z, BlockFace.EAST) ){ // North
@@ -866,7 +849,7 @@ public class RW_1_16_R2 implements Listener{
 				case UP:
 					if ( buttonValidBlock(world, X, Y+1, Z, Half.BOTTOM) ){ // Down
 						blockFace = facing; // ceiling
-			            attachedFace = AttachedFace.CEILING;
+			            attachedFace = Face.CEILING;
 			        }else if ( torchValidBlock(world, X, Y, Z+1, BlockFace.NORTH) ){ // West
 			            blockFace=BlockFace.NORTH;
 			        }else if( torchValidBlock(world, X-1, Y, Z, BlockFace.EAST) ){ // North
@@ -877,7 +860,7 @@ public class RW_1_16_R2 implements Listener{
 			            blockFace = BlockFace.WEST;
 			        }else if ( buttonValidBlock(world, X, Y-1, Z, Half.TOP) ){ // Up
 			        	blockFace = facing; // floor
-			            attachedFace = AttachedFace.FLOOR;
+			            attachedFace = Face.FLOOR;
 			        }else {
 			            return;
 			        }
@@ -893,10 +876,10 @@ public class RW_1_16_R2 implements Listener{
 			            blockFace = BlockFace.WEST;
 			        }else if ( buttonValidBlock(world, X, Y-1, Z, Half.TOP) ){ // Up
 			        	blockFace = facing; // floor
-			            attachedFace = AttachedFace.FLOOR;
+			            attachedFace = Face.FLOOR;
 			        }else if (! buttonValidBlock(world, X, Y+1, Z, Half.BOTTOM) ){ // Down
 			        	blockFace = facing; // ceiling
-			            attachedFace = AttachedFace.CEILING;
+			            attachedFace = Face.CEILING;
 			        }else {
 			            return;
 			        }
@@ -905,48 +888,149 @@ public class RW_1_16_R2 implements Listener{
 					//log("error facing=" + facing);
 					break;
 	        	}
-        	
-	        	break;
+				break;
+			default:
+				break;
+	        
 	        }
-	        //log("blockFace=" + blockFace);
 	        if(attachedFace != null){
 	        	//log("attachedFace=" + attachedFace);
 	        	((Directional) data).setFacing(blockFace);
-	        	((FaceAttachable) data).setAttachedFace(attachedFace);
+	        	((Switch) data).setFace(attachedFace);
 	        	state.setBlockData(data);
 	        	state.update(true, true);
-	        	/**faceButton.setAttachedFace(attachedFace);
-	        	state.setBlockData(faceButton);
-	        	state.update(true, true);
-	        	
-	        	Location loc2 = block.getLocation();
-	        	BlockState state2 = world.getBlockAt(loc2).getState();
-	        	Directional wallButton2 = (Directional) state2.getBlockData();
-	        	wallButton2.setFacing(blockFace);
-	        	state2.setBlockData(wallButton2);
-	        	state2.update(true, true);//*/
 	        }else{
 	        	//log("attachedFace == null");
 	        	((Directional) data).setFacing(blockFace);
 	        	state.setBlockData(data);
 	        	state.update(true, true);
-	        	/**wallButton.setFacing(blockFace);
-	        	state.setBlockData(wallButton);
-	        	state.update(true, true);//*/
 	        }
+        	/**switch(facing){
+			case NORTH:
+				/**log("empty=" + !world.getBlockAt(X,Y-1,Z).isEmpty());
+				log("solid=" + world.getBlockAt(X,Y-1,Z).getType().isSolid());
+				log("tagged=" + !Tags.NO_BUTTONS.isTagged(world.getBlockAt(X-1,Y,Z).getType()));/
+				if( torchValidBlock(world, X-1, Y, Z, BlockFace.EAST) ){ // North
+		            blockFace = BlockFace.EAST;
+				}else if ( torchValidBlock(world, X, Y, Z-1, BlockFace.SOUTH) ){ // East
+		            blockFace=BlockFace.SOUTH;
+		        }else if ( torchValidBlock(world, X+1, Y, Z, BlockFace.WEST) ){ // South buttonValidBlock(world, X, Y-1, Z, Half.TOP)
+		            blockFace = BlockFace.WEST;
+		        }else if ( buttonValidBlock(world, X, Y-1, Z, Half.TOP) ){ // Up
+		            blockFace=BlockFace.UP;
+		        }else if ( buttonValidBlock(world, X, Y+1, Z, Half.BOTTOM) ){ // Down
+		            blockFace=BlockFace.DOWN;
+		        }else if ( torchValidBlock(world, X, Y, Z+1, BlockFace.NORTH) ){ // West
+		            blockFace=BlockFace.NORTH;
+		        }else {
+		        	//log("north error");
+		            return;
+		        }
+				//log("blockFace=" + blockFace);
+				break;
+			case EAST:
+				if ( torchValidBlock(world, X, Y, Z-1, BlockFace.SOUTH) ){ // East
+		            blockFace=BlockFace.SOUTH;
+		        }else if ( torchValidBlock(world, X+1, Y, Z, BlockFace.WEST) ){ // South
+		            blockFace = BlockFace.WEST;
+		        }else if ( buttonValidBlock(world, X, Y-1, Z, Half.TOP) ){ // Up
+		            blockFace=BlockFace.UP;
+		        }else if ( buttonValidBlock(world, X, Y+1, Z, Half.BOTTOM) ){ // Down
+		            blockFace=BlockFace.DOWN;
+		        }else if ( torchValidBlock(world, X, Y, Z+1, BlockFace.NORTH) ){ // West
+		            blockFace=BlockFace.NORTH;
+		        }else if( torchValidBlock(world, X-1, Y, Z, BlockFace.EAST) ){ // North
+		            blockFace = BlockFace.EAST;
+				}else {
+		            return;
+		        }
+				break;
+			case SOUTH:
+				if ( torchValidBlock(world, X+1, Y, Z, BlockFace.WEST) ){ // South
+		            blockFace = BlockFace.WEST;
+		        }else if ( buttonValidBlock(world, X, Y-1, Z, Half.TOP) ){ // Up
+		            blockFace=BlockFace.UP;
+		        }else if (  buttonValidBlock(world, X, Y+1, Z, Half.BOTTOM) ){ // Down
+		            blockFace=BlockFace.DOWN;
+		        }else if ( torchValidBlock(world, X, Y, Z+1, BlockFace.NORTH) ){ // West
+		            blockFace=BlockFace.NORTH;
+		        }else if( torchValidBlock(world, X-1, Y, Z, BlockFace.EAST) ){ // North
+		            blockFace = BlockFace.EAST;
+				}else if ( torchValidBlock(world, X, Y, Z-1, BlockFace.SOUTH) ){ // East
+		            blockFace=BlockFace.SOUTH;
+		        }else {
+		            return;
+		        }
+				break;
+			case WEST:
+				if ( buttonValidBlock(world, X, Y-1, Z, Half.TOP) ){ // Up
+		            blockFace=BlockFace.UP;
+		        }else if (  buttonValidBlock(world, X, Y+1, Z, Half.BOTTOM) ){ // Down
+		            blockFace=BlockFace.DOWN;
+		        }else if ( torchValidBlock(world, X, Y, Z+1, BlockFace.NORTH) ){ // West
+		            blockFace=BlockFace.NORTH;
+		        }else if( torchValidBlock(world, X-1, Y, Z, BlockFace.EAST) ){ // North
+		            blockFace = BlockFace.EAST;
+				}else if ( torchValidBlock(world, X, Y, Z-1, BlockFace.SOUTH) ){ // East
+		            blockFace=BlockFace.SOUTH;
+		        }else if ( torchValidBlock(world, X+1, Y, Z, BlockFace.WEST) ){ // South
+		            blockFace = BlockFace.WEST;
+		        }else {
+		            return;
+		        }
+				break;
+			case UP:
+				if (  buttonValidBlock(world, X, Y+1, Z, Half.BOTTOM) ){ // Down
+		            blockFace=BlockFace.DOWN;
+		        }else if ( torchValidBlock(world, X, Y, Z+1, BlockFace.NORTH) ){ // West
+		            blockFace=BlockFace.NORTH;
+		        }else if( torchValidBlock(world, X-1, Y, Z, BlockFace.EAST) ){ // North
+		            blockFace = BlockFace.EAST;
+				}else if ( torchValidBlock(world, X, Y, Z-1, BlockFace.SOUTH) ){ // East
+		            blockFace=BlockFace.SOUTH;
+		        }else if ( torchValidBlock(world, X+1, Y, Z, BlockFace.WEST) ){ // South
+		            blockFace = BlockFace.WEST;
+		        }else if ( buttonValidBlock(world, X, Y-1, Z, Half.TOP) ){ // Up
+		            blockFace=BlockFace.UP;
+		        }else {
+		            return;
+		        }
+				break;
+			case DOWN:
+				if ( torchValidBlock(world, X, Y, Z+1, BlockFace.NORTH) ){ // West
+		            blockFace=BlockFace.NORTH;
+		        }else if( torchValidBlock(world, X-1, Y, Z, BlockFace.EAST) ){ // North
+		            blockFace = BlockFace.EAST;
+				}else if ( torchValidBlock(world, X, Y, Z-1, BlockFace.SOUTH) ){ // East
+		            blockFace=BlockFace.SOUTH;
+		        }else if ( torchValidBlock(world, X+1, Y, Z, BlockFace.WEST) ){ // South
+		            blockFace = BlockFace.WEST;
+		        }else if ( buttonValidBlock(world, X, Y-1, Z, Half.TOP) ){ // Up
+		            blockFace=BlockFace.UP;
+		        }else if (  buttonValidBlock(world, X, Y+1, Z, Half.BOTTOM) ){ // Down
+		            blockFace=BlockFace.DOWN;
+		        }else {
+		            return;
+		        }
+				break;
+			default:
+				//log("error facing=" + facing);
+				break;
+        	}
         	//log("blockFace=" + blockFace);
-        	//button.setFacing(blockFace);
-        	//state.setBlockData(button);
-        	
+        	button.setFacingDirection(blockFace);
+        	state.setData(button);
+        	state.update(true);//*/
         }else if( !isSpam && event.getPlayer().isSneaking() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
         		event.getItem().equals(wrench) && !onblacklist && 
-        		Tags_116.BUTTONS.isTagged(block.getType()) && config.getBoolean("enabled.buttons", true) ){
+        		Tags.BUTTONS.isTagged(block.getType()) && config.getBoolean("enabled.buttons", true) ){
         	event.setUseInteractedBlock(Result.DENY);
         	BlockState state = block.getState();
         	Directional wallButton = (Directional) state.getBlockData(); // Wall Button
-        	FaceAttachable faceButton = (FaceAttachable) state.getBlockData(); // Floor Ceiling Button
+        	Switch bFace = (Switch) state.getBlockData();
+        	//FaceAttachable faceButton = (FaceAttachable) state.getBlockData(); // Floor Ceiling Button
         	BlockFace facing = wallButton.getFacing();
-        	AttachedFace aface = faceButton.getAttachedFace();
+        	Face aface = bFace.getFace();
         	//log("facing=" + facing);
         	//log("aface=" + aface);
         	AttachedFace attachedFace = null;
@@ -957,7 +1041,7 @@ public class RW_1_16_R2 implements Listener{
 	        int Y = loc.getBlockY();
 	        int Z = loc.getBlockZ();
 	        
-	        if(aface.equals(AttachedFace.WALL)){
+	        if(aface.equals(Face.WALL)){
 	        	return;
 	        }
 	        
@@ -983,10 +1067,10 @@ public class RW_1_16_R2 implements Listener{
 	    	state.update(true, true);
         }
         
-        /** Chests */ // TODO: Chests
+        /** Chests */
         if( !isSpam && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
         		event.getItem().equals(wrench) && !onblacklist && 
-        		Tags_116.CHESTS.isTagged(block.getType()) && config.getBoolean("enabled.chests", true) ){
+        		Tags.CHESTS.isTagged(block.getType()) && config.getBoolean("enabled.chests", true) ){
         	//org.bukkit.block.data.type.Chest chest = (org.bukkit.block.data.type.Chest) block.getBlockData();
         	BlockState state = block.getState();
     		Location location = block.getLocation();
@@ -1009,23 +1093,23 @@ public class RW_1_16_R2 implements Listener{
         	        rightchest = (Chest) doublechest.getRightSide();
         	        
         	    }*/
-    			if(!block.getType().equals(Material.ENDER_CHEST)){
-	    			if( !(((org.bukkit.block.Chest)block.getState()).getInventory() instanceof DoubleChestInventory) ) {
-		    			Directional dir = (Directional)block.getBlockData();
-		    			if(dir.getFacing() == BlockFace.EAST) dir.setFacing(BlockFace.NORTH);
-		    			else if(dir.getFacing() == BlockFace.NORTH) dir.setFacing(BlockFace.WEST);
-		    			else if(dir.getFacing() == BlockFace.WEST) dir.setFacing(BlockFace.SOUTH);
-		    			else if(dir.getFacing() == BlockFace.SOUTH) dir.setFacing(BlockFace.EAST);
-		    			block.setBlockData(dir);
-	        		}
-    			}else if(block.getType().equals(Material.ENDER_CHEST)){
-    				Directional dir = (Directional)block.getBlockData();
+    		if(!block.getType().equals(Material.ENDER_CHEST)){
+    			if( !(((org.bukkit.block.Chest)block.getState()).getInventory() instanceof DoubleChestInventory) ) {
+	    			Directional dir = (Directional)block.getBlockData();
 	    			if(dir.getFacing() == BlockFace.EAST) dir.setFacing(BlockFace.NORTH);
 	    			else if(dir.getFacing() == BlockFace.NORTH) dir.setFacing(BlockFace.WEST);
 	    			else if(dir.getFacing() == BlockFace.WEST) dir.setFacing(BlockFace.SOUTH);
 	    			else if(dir.getFacing() == BlockFace.SOUTH) dir.setFacing(BlockFace.EAST);
 	    			block.setBlockData(dir);
-    			}
+        		}
+			}else if(block.getType().equals(Material.ENDER_CHEST)){
+				Directional dir = (Directional)block.getBlockData();
+    			if(dir.getFacing() == BlockFace.EAST) dir.setFacing(BlockFace.NORTH);
+    			else if(dir.getFacing() == BlockFace.NORTH) dir.setFacing(BlockFace.WEST);
+    			else if(dir.getFacing() == BlockFace.WEST) dir.setFacing(BlockFace.SOUTH);
+    			else if(dir.getFacing() == BlockFace.SOUTH) dir.setFacing(BlockFace.EAST);
+    			block.setBlockData(dir);
+			}
     			if(event.getPlayer().isSneaking()){
 	    			BlockData data = state.getBlockData();
 	    			Chest chest = (Chest) data;
@@ -1091,10 +1175,10 @@ public class RW_1_16_R2 implements Listener{
         }
         
         /** Heads */ //skullfaces TODO: Heads
-        if( event.getPlayer().isSneaking() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
+        if( !isSpam && event.getPlayer().isSneaking() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
         		event.getItem().equals(wrench) && !onblacklist &&  
-        		( Tags_116.HEADS.isTagged(block.getType()) && config.getBoolean("enabled.heads", true) ||
-        			Tags_116.HEADS2.isTagged(block.getType()) && config.getBoolean("enabled.heads", true) ) ){
+        		( Tags.HEADS.isTagged(block.getType()) && config.getBoolean("enabled.heads", true) ||
+        			Tags.HEADS2.isTagged(block.getType()) && config.getBoolean("enabled.heads", true) ) ){
         	BlockState state = block.getState();
 			Material type = block.getType();
 			switch(type){
@@ -1139,9 +1223,9 @@ public class RW_1_16_R2 implements Listener{
 			}
 			state.setType(type);
 			state.update(true, true);
-        }else if( !event.getPlayer().isSneaking() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
+        }else if( !isSpam && !event.getPlayer().isSneaking() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
         		event.getItem().equals(wrench) && !onblacklist &&  
-        		Tags_116.HEADS.isTagged(block.getType()) && config.getBoolean("enabled.heads", true) ){
+        		Tags.HEADS.isTagged(block.getType()) && config.getBoolean("enabled.heads", true) ){
         	BlockState state = block.getState();
         	BlockFace blockFace = null;
         	BlockFace rotation = null;
@@ -1182,7 +1266,7 @@ public class RW_1_16_R2 implements Listener{
         		break;
         	case SOUTH_WEST: 		// 11 
            	 		blockFace =  BlockFace.WEST_SOUTH_WEST;
-        		break;
+           	 		break;
         	case WEST_SOUTH_WEST: 	// 12 
            	 		blockFace =  BlockFace.WEST;
         		break;
@@ -1209,16 +1293,21 @@ public class RW_1_16_R2 implements Listener{
         }
         
         /** Signs */ //skullfaces TODO: Signs
-        if( event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
+        if( !isSpam && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
         		event.getItem().equals(wrench) && !onblacklist &&  
-        		Tags_116.SIGNS.isTagged(block.getType()) && config.getBoolean("enabled.signs", true) ){
+        		Tags.SIGNS.isTagged(block.getType()) && config.getBoolean("enabled.heads", true) ){
         	BlockState state = block.getState();
-        	Rotatable sign = (Rotatable) block.getBlockData();
-        	//BlockState state = block.getState();
-        	BlockFace rotation = sign.getRotation();
+        	Rotatable bstate = (Rotatable) block.getBlockData();
+        	BlockFace rotation = bstate.getRotation();
         	BlockFace blockFace = null;
-        	//log("rotation=" + rotation);
+        	//BlockFace rotation = null;
+        	//Sign signBlock = null;
+        	//org.bukkit.material.Sign signMat = null;
         	
+        	//signBlock = (Sign) state;
+        	//signMat = (org.bukkit.material.Sign) state.getData();
+	        //rotation = signMat.getFacing();
+
         	switch(rotation){
         	case NORTH: 			// 1 
            	 	if( !event.getPlayer().isSneaking() ){
@@ -1335,24 +1424,24 @@ public class RW_1_16_R2 implements Listener{
 			default:
 				break;
         	}
-        	sign.setRotation(blockFace);
-        	state.setBlockData(sign);
+        	bstate.setRotation(blockFace);
+        	state.setBlockData(bstate);
         	state.update(true, true);
-        	//BlockState state2 = block.getState();
-            //state2.update(true, true);
+        	//block.setBlockData(state);
+        	
+        	//signMat.setFacingDirection(blockFace);
+        	//signBlock.setData(signMat);
+        	//signBlock.update();
         		//sign.update(true, true);
         	
         	//block.setBlockData(skull);
             event.setUseInteractedBlock(Result.DENY);
         }
         
-        /** Logs */ // TODO: Logs Pillars Bone
+        /** Logs */ // TODO: Logs
         if( !isSpam && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
-        		event.getItem().equals(wrench) && !onblacklist &&  
-        		( Tags_116.LOGS.isTagged(block.getType()) && config.getBoolean("enabled.logs", true) ||
-        		Tags_116.PILLARS.isTagged(block.getType()) && config.getBoolean("enabled.pillars", true) ||
-				Tags_116.BASALT.isTagged(block.getType()) && config.getBoolean("enabled.basalt", true) ||
-				Tags_116.BONE.isTagged(block.getType()) && config.getBoolean("enabled.bone", true) ) ){
+        		event.getItem().equals(wrench) && !onblacklist && 
+        		Tags.LOGS.isTagged(block.getType()) && config.getBoolean("enabled.logs", true) ){
         	Orientable state = (Orientable) block.getBlockData(); // Directional state = (Directional) block.getBlockData();
             Axis axis = state.getAxis();
             Orientable log = ((Orientable) Material.getMaterial(block.getType().toString()).createBlockData());
@@ -1373,11 +1462,11 @@ public class RW_1_16_R2 implements Listener{
         
         /** Stairs */ // TODO: Stairs
         if( !isSpam && event.getPlayer().isSneaking() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
-        		event.getItem().equals(wrench) && !onblacklist &&  
-        		Tags_116.STAIRS.isTagged(block.getType()) && config.getBoolean("enabled.stairs.invert", true) ){
+        		event.getItem().equals(wrench) && !onblacklist && 
+        		Tags.STAIRS.isTagged(block.getType()) && config.getBoolean("enabled.stairs.invert", true) ){
         	BlockState state = block.getState();
         	Stairs stairs = (Stairs) state.getBlockData();
-        	//org.bukkit.block.data.type.Stairs.Shape shape = stairs.getShape();
+        	
 			Half half = stairs.getHalf();
         	switch(half){
         	case BOTTOM:
@@ -1408,9 +1497,9 @@ public class RW_1_16_R2 implements Listener{
         		world.getBlockAt(X, Y, Z-1).setType(Material.BARRIER);
         		world.getBlockAt(X, Y, Z-1).setType(Material.AIR);
         	}
-        }else if( !isSpam && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
+        }else if( !isSpam && !event.getPlayer().isSneaking() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
         		event.getItem().equals(wrench) && !onblacklist &&  
-        		Tags_116.STAIRS.isTagged(block.getType()) && config.getBoolean("enabled.stairs.rotate", true) ){
+        		Tags.STAIRS.isTagged(block.getType()) && config.getBoolean("enabled.stairs.rotate", true) ){
         	BlockState state = block.getState();
         	Directional stair = (Directional) block.getBlockData();
         	Stairs stairs = (Stairs) state.getBlockData();
@@ -1464,12 +1553,12 @@ public class RW_1_16_R2 implements Listener{
         
         /** Slabs */ // TODO: Slabs
         if( !isSpam && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
-        		event.getItem().equals(wrench) && !onblacklist &&  
-        		Tags_116.SLABS.isTagged(block.getType()) && config.getBoolean("enabled.slabs", true) ){
+        		event.getItem().equals(wrench) && !onblacklist && 
+        		Tags.SLABS.isTagged(block.getType()) && config.getBoolean("enabled.slabs", true) ){
         	BlockState state = block.getState();
         	Slab slab = (Slab) state.getBlockData();
 			Type type = slab.getType();
-			//log("type=" + type);
+			log("type=" + type);
 			switch(type){
 			case BOTTOM:
 				slab.setType(Type.TOP);
@@ -1486,8 +1575,8 @@ public class RW_1_16_R2 implements Listener{
         
         /** Beds */ // TODO: Beds
         if( !isSpam && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
-        		event.getItem().equals(wrench) && !onblacklist &&  
-        		Tags_116.BEDS.isTagged(block.getType()) && config.getBoolean("enabled.beds", true) ){
+        		event.getItem().equals(wrench) && !onblacklist && 
+        		Tags.BEDS.isTagged(block.getType()) && config.getBoolean("enabled.beds", true) ){
         	BlockState state = block.getState();
         	Bed bed = (Bed) state.getBlockData();
 			BlockFace face = bed.getFacing();
@@ -1924,13 +2013,11 @@ public class RW_1_16_R2 implements Listener{
 	        event.setUseInteractedBlock(Result.DENY);
         }
         
-        /** Chain */ // TODO: Chain
-        if( !isSpam && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
-        		event.getItem().equals(wrench) && !onblacklist &&  
+        /** Chain */
+        /**if( event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && event.getItem().equals(wrench) && 
         		block.getType() == Material.CHAIN && config.getBoolean("enabled.chain", true) && v1_16_R2){
-        	log("chain 1");
         	BlockState state = block.getState();
-        	Orientable chain = (Orientable) state.getBlockData();
+        	org.bukkit.block.data.type.Chain chain = (org.bukkit.block.data.type.Chain) state.getBlockData();
         	Axis axis = chain.getAxis();
         	switch(axis){
         	case X:
@@ -1945,178 +2032,70 @@ public class RW_1_16_R2 implements Listener{
         	}
         	state.setBlockData(chain);
             state.update(true, true);
-        }
+        }*/
         
         /** Grindstone */ // TODO: Grindstone
         if( !isSpam && event.getPlayer().isSneaking() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
         		event.getItem().equals(wrench) && !onblacklist &&  
         		block.getType() == Material.GRINDSTONE && config.getBoolean("enabled.workstations", true)){
-        	//Tags_116.WORKSTATIONS.isTagged(block.getType()) && config.getBoolean("enabled.workstations", true)
-        	BlockState state = block.getState();
-        	Directional face = (Directional) state.getBlockData();
-        	BlockFace facing = face.getFacing();
-        	FaceAttachable att = (FaceAttachable) state.getBlockData();
-        	AttachedFace af = (AttachedFace) att.getAttachedFace();
-        	Location loc = block.getLocation();
-        	World world = loc.getWorld();
-	        int X = loc.getBlockX();
-	        int Y = loc.getBlockY();
-	        int Z = loc.getBlockZ();
-	        BlockFace blockFace = null;
-	        AttachedFace attachedFace = null;
-	        /**log("facing=" + facing.toString());
-	        log("NORTH " + world.getBlockAt(X,Y,Z+1).getType().toString() + " empty=" + world.getBlockAt(X,Y,Z+1).isEmpty() + " solid=" + world.getBlockAt(X,Y,Z+1).getType().isSolid() + " tag=" + Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y,Z+1).getType()));
-	        log("EAST " + world.getBlockAt(X-1,Y,Z).getType().toString() + " empty=" + world.getBlockAt(X-1,Y,Z).isEmpty() + " solid=" + world.getBlockAt(X-1,Y,Z).getType().isSolid() + " tag=" + Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X-1,Y,Z).getType()));
-	        log("SOUTH " + world.getBlockAt(X,Y,Z-1).getType().toString() + " empty=" + world.getBlockAt(X,Y,Z-1).isEmpty() + " solid=" + world.getBlockAt(X,Y,Z-1).getType().isSolid() + " tag=" + Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y,Z-1).getType()));
-	        log("WEST " + world.getBlockAt(X+1,Y,Z).getType().toString() + " empty=" + world.getBlockAt(X+1,Y,Z).isEmpty() + " solid=" + world.getBlockAt(X+1,Y,Z).getType().isSolid() + " tag=" + Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X+1,Y,Z).getType()));
-	        log("UP " + world.getBlockAt(X,Y+1,Z).getType().toString() + " empty=" + world.getBlockAt(X,Y+1,Z).isEmpty() + " solid=" + world.getBlockAt(X,Y+1,Z).getType().isSolid() + " tag=" + Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y+1,Z).getType()));
-	        log("DOWN " + world.getBlockAt(X,Y-1,Z).getType().toString() + " empty=" + world.getBlockAt(X,Y-1,Z).isEmpty() + " solid=" + world.getBlockAt(X,Y-1,Z).getType().isSolid() + " tag=" + Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y-1,Z).getType()));//*/
-	        switch(af){
-			case FLOOR:
-				/**if( facing.equals(BlockFace.NORTH) ){
-					if(!world.getBlockAt(X,Y,Z+1).isEmpty() && world.getBlockAt(X,Y,Z+1).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y,Z+1).getType()) ){
-						attachedFace = AttachedFace.WALL;
-						//** South 
-					}else if(!world.getBlockAt(X,Y+1,Z).isEmpty() && world.getBlockAt(X,Y+1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y+1,Z).getType())){
-						attachedFace = AttachedFace.CEILING;
-					}else if(!world.getBlockAt(X,Y-1,Z).isEmpty() && world.getBlockAt(X,Y-1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y-1,Z).getType())){
-						attachedFace = AttachedFace.FLOOR;
-					}else{
-						return;
-					}
-				}else if( facing.equals(BlockFace.SOUTH) ){
-					if(!world.getBlockAt(X,Y,Z-1).isEmpty() && world.getBlockAt(X,Y,Z-1).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y,Z-1).getType())){
-						attachedFace = AttachedFace.WALL;
-						//** Ceiling 
-					}else if(!world.getBlockAt(X,Y+1,Z).isEmpty() && world.getBlockAt(X,Y+1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y+1,Z).getType())){
-						attachedFace = AttachedFace.CEILING;
-					}else if(!world.getBlockAt(X,Y-1,Z).isEmpty() && world.getBlockAt(X,Y-1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y-1,Z).getType())){
-						attachedFace = AttachedFace.FLOOR;
-					}else{
-						return;
-					}
-				}else if( facing.equals(BlockFace.EAST) ){
-					if(!world.getBlockAt(X-1,Y,Z).isEmpty() && world.getBlockAt(X-1,Y,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X-1,Y,Z).getType())){
-						attachedFace = AttachedFace.WALL;
-						//** West 
-					}else if(!world.getBlockAt(X,Y+1,Z).isEmpty() && world.getBlockAt(X,Y+1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y+1,Z).getType())){
-						attachedFace = AttachedFace.CEILING;
-					}else if(!world.getBlockAt(X,Y-1,Z).isEmpty() && world.getBlockAt(X,Y-1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y-1,Z).getType())){
-						attachedFace = AttachedFace.FLOOR;
-					}else{
-						return;
-					}
-				}else if( facing.equals(BlockFace.WEST) ){
-					if(!world.getBlockAt(X+1,Y,Z).isEmpty() && world.getBlockAt(X+1,Y,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X+1,Y,Z).getType())){
-						attachedFace = AttachedFace.WALL;
-						//** Ceiling 
-					}else if(!world.getBlockAt(X,Y+1,Z).isEmpty() && world.getBlockAt(X,Y+1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y+1,Z).getType())){
-						attachedFace = AttachedFace.CEILING;
-					}else if(!world.getBlockAt(X,Y-1,Z).isEmpty() && world.getBlockAt(X,Y-1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y-1,Z).getType())){
-						attachedFace = AttachedFace.FLOOR;
-					}else{
-						return;
-					}
-				}//*/
-				attachedFace = AttachedFace.WALL;
-				break;
-			case WALL:
-				/**if( facing.equals(BlockFace.NORTH) ){
-					if(!world.getBlockAt(X,Y+1,Z).isEmpty() && world.getBlockAt(X,Y+1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y+1,Z).getType())){
-						attachedFace = AttachedFace.CEILING;
-					}else if(!world.getBlockAt(X,Y-1,Z).isEmpty() && world.getBlockAt(X,Y-1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y-1,Z).getType())){
-						attachedFace = AttachedFace.FLOOR;
-					}else{
-						return;
-					}
-				}else if( facing.equals(BlockFace.SOUTH) ){
-					if(!world.getBlockAt(X,Y+1,Z).isEmpty() && world.getBlockAt(X,Y+1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y+1,Z).getType())){
-						attachedFace = AttachedFace.CEILING;
-					}else if(!world.getBlockAt(X,Y-1,Z).isEmpty() && world.getBlockAt(X,Y-1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y-1,Z).getType())){
-						attachedFace = AttachedFace.FLOOR;
-					}else{
-						return;
-					}
-				}else if( facing.equals(BlockFace.EAST) ){
-					if(!world.getBlockAt(X,Y+1,Z).isEmpty() && world.getBlockAt(X,Y+1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y+1,Z).getType())){
-						attachedFace = AttachedFace.CEILING;
-					}else if(!world.getBlockAt(X,Y-1,Z).isEmpty() && world.getBlockAt(X,Y-1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y-1,Z).getType())){
-						attachedFace = AttachedFace.FLOOR;
-					}else{
-						return;
-					}
-				}else if( facing.equals(BlockFace.WEST) ){
-					if(!world.getBlockAt(X,Y+1,Z).isEmpty() && world.getBlockAt(X,Y+1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y+1,Z).getType())){
-						attachedFace = AttachedFace.CEILING;
-					}else if(!world.getBlockAt(X,Y-1,Z).isEmpty() && world.getBlockAt(X,Y-1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y-1,Z).getType())){
-						attachedFace = AttachedFace.FLOOR;
-					}else{
-						return;
-					}
-				}//*/
-				attachedFace = AttachedFace.CEILING;
-				break;
-			case CEILING:
-				/**if( facing.equals(BlockFace.NORTH) ){
-					if(!world.getBlockAt(X,Y-1,Z).isEmpty() && world.getBlockAt(X,Y-1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y-1,Z).getType())){
-						attachedFace = AttachedFace.FLOOR;
-					}else if(!world.getBlockAt(X,Y,Z+1).isEmpty() && world.getBlockAt(X,Y,Z+1).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y,Z+1).getType()) ){
-						attachedFace = AttachedFace.WALL;
-						//** South 
-					}else {
-						return;
-					}
-				}else if( facing.equals(BlockFace.SOUTH) ){
-					if(!world.getBlockAt(X,Y-1,Z).isEmpty() && world.getBlockAt(X,Y-1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y-1,Z).getType())){
-						attachedFace = AttachedFace.FLOOR;
-					}else if(!world.getBlockAt(X,Y,Z-1).isEmpty() && world.getBlockAt(X,Y,Z-1).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y,Z-1).getType())){
-						attachedFace = AttachedFace.WALL;
-						//** Ceiling 
-					}else {
-						return;
-					}
-				}else if( facing.equals(BlockFace.EAST) ){
-					if(!world.getBlockAt(X,Y-1,Z).isEmpty() && world.getBlockAt(X,Y-1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y-1,Z).getType())){
-						attachedFace = AttachedFace.FLOOR;
-					}else if(!world.getBlockAt(X-1,Y,Z).isEmpty() && world.getBlockAt(X-1,Y,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X-1,Y,Z).getType())){
-						attachedFace = AttachedFace.WALL;
-						//** West 
-					}else {
-						return;
-					}
-				}else if( facing.equals(BlockFace.WEST) ){
-					if(!world.getBlockAt(X,Y-1,Z).isEmpty() && world.getBlockAt(X,Y-1,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X,Y-1,Z).getType())){
-						attachedFace = AttachedFace.FLOOR;
-					}else if(!world.getBlockAt(X+1,Y,Z).isEmpty() && world.getBlockAt(X+1,Y,Z).getType().isSolid() && !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X+1,Y,Z).getType())){
-						attachedFace = AttachedFace.WALL;
-						//** Ceiling 
-					}else {
-						return;
-					}
-				}//*/
-				attachedFace = AttachedFace.FLOOR;
-				break;
-			default:
-				break;
+        	try{
+	        	BlockState state = block.getState();
+	        	Directional face = (Directional) state.getBlockData();
+	        	BlockFace facing = face.getFacing();
+	        	Face af = ((Switch) state.getBlockData()).getFace();
 	        	
-	        }
-		      //log("blockFace=" + blockFace.toString());
-				//block.setBlockData(face);
-			att.setAttachedFace(attachedFace);
-			state.setBlockData(att);
-				//state.update(true, true);
-			state.update(true);
-        }
+	        	//Face af = att.getFace();
+	        	
+	        	//FaceAttachable att = (FaceAttachable) state.getBlockData();
+	        	//AttachedFace af = (AttachedFace) att.getAttachedFace();
+	        	Location loc = block.getLocation();
+	        	World world = loc.getWorld();
+		        int X = loc.getBlockX();
+		        int Y = loc.getBlockY();
+		        int Z = loc.getBlockZ();
+		        BlockFace blockFace = null;
+		        Face attachedFace = null;
+		        
+		        /**log("facing=" + facing.toString());
+		        log("NORTH " + world.getBlockAt(X,Y,Z+1).getType().toString() + " empty=" + world.getBlockAt(X,Y,Z+1).isEmpty() + " solid=" + world.getBlockAt(X,Y,Z+1).getType().isSolid() + " tag=" + Tags.NO_BUTTONS.isTagged(world.getBlockAt(X,Y,Z+1).getType()));
+		        log("EAST " + world.getBlockAt(X-1,Y,Z).getType().toString() + " empty=" + world.getBlockAt(X-1,Y,Z).isEmpty() + " solid=" + world.getBlockAt(X-1,Y,Z).getType().isSolid() + " tag=" + Tags.NO_BUTTONS.isTagged(world.getBlockAt(X-1,Y,Z).getType()));
+		        log("SOUTH " + world.getBlockAt(X,Y,Z-1).getType().toString() + " empty=" + world.getBlockAt(X,Y,Z-1).isEmpty() + " solid=" + world.getBlockAt(X,Y,Z-1).getType().isSolid() + " tag=" + Tags.NO_BUTTONS.isTagged(world.getBlockAt(X,Y,Z-1).getType()));
+		        log("WEST " + world.getBlockAt(X+1,Y,Z).getType().toString() + " empty=" + world.getBlockAt(X+1,Y,Z).isEmpty() + " solid=" + world.getBlockAt(X+1,Y,Z).getType().isSolid() + " tag=" + Tags.NO_BUTTONS.isTagged(world.getBlockAt(X+1,Y,Z).getType()));
+		        log("UP " + world.getBlockAt(X,Y+1,Z).getType().toString() + " empty=" + world.getBlockAt(X,Y+1,Z).isEmpty() + " solid=" + world.getBlockAt(X,Y+1,Z).getType().isSolid() + " tag=" + Tags.NO_BUTTONS.isTagged(world.getBlockAt(X,Y+1,Z).getType()));
+		        log("DOWN " + world.getBlockAt(X,Y-1,Z).getType().toString() + " empty=" + world.getBlockAt(X,Y-1,Z).isEmpty() + " solid=" + world.getBlockAt(X,Y-1,Z).getType().isSolid() + " tag=" + Tags.NO_BUTTONS.isTagged(world.getBlockAt(X,Y-1,Z).getType()));//*/
+		        switch(af){
+				case FLOOR:
+					attachedFace = Face.WALL;
+					break;
+				case WALL:
+					attachedFace = Face.CEILING;
+					break;
+				case CEILING:
+					attachedFace = Face.FLOOR;
+					break;
+				default:
+					break;
+		        	
+		        }
+			      //log("blockFace=" + blockFace.toString());
+					//block.setBlockData(face);
+				//att.setAttachedFace(attachedFace);
+		        ((Switch) state).setFace(attachedFace);
+				//att.setFace(attachedFace);
+				//state.setBlockData(att);
+					//state.update(true, true);
+				state.update(true, true);
+        	}catch(Exception e){}
+        } //*/
         
         /** Trapdoors */ // TODO: Trapdoors
         if( !isSpam && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
         		event.getItem().equals(wrench) && !onblacklist &&  
-        		Tags_116.TRAPDOORS.isTagged(block.getType()) ){
+        		Tags.TRAPDOORS.isTagged(block.getType()) ){
         	event.setUseInteractedBlock(Result.DENY);
         	BlockState state = block.getState();
-        	Directional trapdoor2 = (Directional) state.getBlockData();
-        	Bisected trapdoor = (Bisected) state.getBlockData();
-    		BlockFace facing = trapdoor2.getFacing();
+    		TrapDoor trapdoor = (TrapDoor) state.getBlockData();
+    		BlockFace facing = trapdoor.getFacing();
     		Half half = trapdoor.getHalf();
     		if(event.getPlayer().isSneaking() && config.getBoolean("enabled.trapdoors.invert", true) ){
 	    		/** half */
@@ -2136,32 +2115,32 @@ public class RW_1_16_R2 implements Listener{
 	    		/** facing */
 	    		switch(facing){
 	    		case NORTH:
-	    			trapdoor2.setFacing(BlockFace.EAST);
+	    			trapdoor.setFacing(BlockFace.EAST);
 	    			break;
 	    		case EAST:
-	    			trapdoor2.setFacing(BlockFace.SOUTH);
+	    			trapdoor.setFacing(BlockFace.SOUTH);
 	    			break;
 	    		case SOUTH:
-	    			trapdoor2.setFacing(BlockFace.WEST);
+	    			trapdoor.setFacing(BlockFace.WEST);
 	    			break;
 	    		case WEST:
-	    			trapdoor2.setFacing(BlockFace.NORTH);
+	    			trapdoor.setFacing(BlockFace.NORTH);
 	    			break;
 				default:
 					//log("default");
 					break;
 	    		}
-	    		state.setBlockData(trapdoor2);
+	    		state.setBlockData(trapdoor);
 	            state.update(true, true);
 	            event.setUseInteractedBlock(Result.DENY);
 	    		//log("facing=" + facing);
     		}
         }
     	
-        /** Rails */ // TODO: Rails
+        /** Rails */
         if( !isSpam && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
-        		event.getItem().equals(wrench) && !onblacklist &&  
-        		Tags_116.RAILS.isTagged(block.getType()) && config.getBoolean("enabled.rails", true) ){
+        		event.getItem().equals(wrench) && !onblacklist && 
+        		Tags.RAILS.isTagged(block.getType()) && config.getBoolean("enabled.rails", true) ){
         	BlockState state = block.getState();
         	Rail rail = (Rail) block.getBlockData();
 			Shape shape = rail.getShape();
@@ -2240,7 +2219,7 @@ public class RW_1_16_R2 implements Listener{
 					}
 					break;
 				}
-        	}else{
+			}else{
         		switch(shape){
 				case ASCENDING_EAST:
 					if( event.getPlayer().isSneaking() ){
@@ -2290,15 +2269,15 @@ public class RW_1_16_R2 implements Listener{
 	public boolean signValidBlock(World world, int X, int Y, int Z, BlockFace blockface){
 		if( !world.getBlockAt(X, Y, Z).isEmpty() == false){			return false;		}
 		if( world.getBlockAt(X, Y, Z).getType().isSolid() == false){			return false;		}
-		if( !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){
-			if(Tags_116.CHESTS.isTagged(world.getBlockAt(X, Y, Z).getType())){
+		if( !Tags.NO_BUTTONS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){
+			if(Tags.CHESTS.isTagged(world.getBlockAt(X, Y, Z).getType())){
 				return true;
 			}else{
 				return false;
 			}
 		}
-		if( !Tags_116.SIGNS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
-		if( !Tags_116.SIGNS2.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
+		if( !Tags.SIGNS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
+		if( !Tags.SIGNS2.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
 		if( SameFacing(world, X, Y, Z, blockface)  == false){			return false;		}
     	return true;
     }
@@ -2306,9 +2285,9 @@ public class RW_1_16_R2 implements Listener{
 	public boolean lanternValidBlock(World world, int X, int Y, int Z, Half blockface){
 		if( !world.getBlockAt(X, Y, Z).isEmpty() == false){			return false;		}
 		if( world.getBlockAt(X, Y, Z).getType().isSolid() == false){			return false;		}
-		if( !Tags_116.NO_LANTERNS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
-		if( !Tags_116.SIGNS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
-		if( !Tags_116.SIGNS2.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
+		if( !Tags.NO_LANTERNS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
+		if( !Tags.SIGNS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
+		if( !Tags.SIGNS2.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
 		if( SameHalf(world, X, Y, Z, blockface)  == false){			return false;		}
     	return true;
     }
@@ -2316,9 +2295,9 @@ public class RW_1_16_R2 implements Listener{
 	public boolean buttonValidBlock(World world, int X, int Y, int Z, Half blockface){
 		if( !world.getBlockAt(X, Y, Z).isEmpty() == false){			return false;		}
 		if( world.getBlockAt(X, Y, Z).getType().isSolid() == false){			return false;		}
-		if( !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
-		if( !Tags_116.SIGNS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
-		if( !Tags_116.SIGNS2.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
+		if( !Tags.NO_BUTTONS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
+		if( !Tags.SIGNS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
+		if( !Tags.SIGNS2.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
 		if( SameHalf(world, X, Y, Z, blockface)  == false){			return false;		}
     	return true;
     }
@@ -2326,11 +2305,11 @@ public class RW_1_16_R2 implements Listener{
 	public boolean torchValidBlock(World world, int X, int Y, int Z, BlockFace blockface){
 		if( !world.getBlockAt(X, Y, Z).isEmpty() == false){			return false;		}
 		if( world.getBlockAt(X, Y, Z).getType().isSolid() == false){			return false;		}
-		if( !Tags_116.NO_BUTTONS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
-		if( !Tags_116.SIGNS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
-		if( !Tags_116.SIGNS2.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
+		if( !Tags.NO_BUTTONS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
+		if( !Tags.SIGNS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
+		if( !Tags.SIGNS2.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){			return false;		}
 		if( SameFacing(world, X, Y, Z, blockface)  == false){			return false;		}
-		if( !Tags_116.SLABS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){
+		if( !Tags.SLABS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){
 			Slab slab = (Slab) world.getBlockAt(X, Y, Z).getState().getBlockData();
 			if(!slab.getType().equals(Slab.Type.DOUBLE))
 			return false;		}
@@ -2338,7 +2317,7 @@ public class RW_1_16_R2 implements Listener{
     }
 	
 	public boolean SameFacing(World world, int X, int Y, int Z, BlockFace blockface){
-		if( Tags_116.STAIRS.isTagged(world.getBlockAt(X,Y,Z).getType()) && 
+		if( Tags.STAIRS.isTagged(world.getBlockAt(X,Y,Z).getType()) && 
 				!((Directional) world.getBlockAt(X,Y,Z).getState().getBlockData()).getFacing().equals(blockface)){
 			return false;
 		}
@@ -2348,7 +2327,7 @@ public class RW_1_16_R2 implements Listener{
 	public boolean SameHalf(World world, int X, int Y, int Z, Half blockface){
 		Type blockface2 = null;
 		//half.equals(Half.BOTTOM)
-		if( Tags_116.STAIRS.isTagged(world.getBlockAt(X,Y,Z).getType()) ){
+		if( Tags.STAIRS.isTagged(world.getBlockAt(X,Y,Z).getType()) ){
 			Block block = world.getBlockAt(X,Y,Z);
 			BlockState state = block.getState();
 	    	Stairs stairs = (Stairs) state.getBlockData();
@@ -2356,7 +2335,7 @@ public class RW_1_16_R2 implements Listener{
 			if(!half.equals(blockface)){
 				return false;
 			}
-		}else if( Tags_116.SLABS.isTagged(world.getBlockAt(X,Y,Z).getType()) ){
+		}else if( Tags.SLABS.isTagged(world.getBlockAt(X,Y,Z).getType()) ){
 			if(blockface.equals(Bisected.Half.BOTTOM)){
 				blockface2 = Slab.Type.BOTTOM;
 			}else if(blockface.equals(Bisected.Half.TOP)){
@@ -2370,7 +2349,7 @@ public class RW_1_16_R2 implements Listener{
 				//log("slab false");
 				return false;
 			}
-		}else if( Tags_116.TRAPDOORS.isTagged(world.getBlockAt(X,Y,Z).getType()) ){
+		}else if( Tags.TRAPDOORS.isTagged(world.getBlockAt(X,Y,Z).getType()) ){
 			Block block = world.getBlockAt(X,Y,Z);
 			BlockState state = block.getState();
 	    	TrapDoor stairs = (TrapDoor) state.getBlockData();
@@ -2418,7 +2397,7 @@ public class RW_1_16_R2 implements Listener{
         onblacklist = StrUtils.stringContains(config.getString("blacklist", ""),event.getPlayer().getWorld().getName());
         /** Armor Stands */
         if( !event.getPlayer().isSneaking() && event.getPlayer().getInventory().getItemInMainHand().equals(wrench)  
-        		&& entity instanceof ArmorStand && config.getBoolean("enabled.armorstands", true) &&  !onblacklist ){
+        		&& entity instanceof ArmorStand && config.getBoolean("enabled.armorstands", true) && !onblacklist ){
         	ArmorStand as = (ArmorStand) entity;
         	float yaw = as.getLocation().getYaw();
         	yaw = yaw + 45;
@@ -2428,7 +2407,7 @@ public class RW_1_16_R2 implements Listener{
 			//log("yaw=" + yaw);
 
         }if( event.getPlayer().isSneaking() && event.getPlayer().getInventory().getItemInMainHand().equals(wrench)  
-        		&& entity instanceof ArmorStand && config.getBoolean("enabled.armorstands", true) &&  !onblacklist ){
+        		&& entity instanceof ArmorStand && config.getBoolean("enabled.armorstands", true) && !onblacklist ){
         	ArmorStand as = (ArmorStand) entity;
         	float yaw = as.getLocation().getYaw();
         	yaw = yaw + 1;
@@ -2444,9 +2423,9 @@ public class RW_1_16_R2 implements Listener{
 		logger.info(ChatColor.YELLOW + pdfFile.getName() + " v" + pdfFile.getVersion() + ChatColor.RESET + " " + dalog );
 	}
 	public	void logDebug(String dalog){
-		log(ChatColor.RED + "[DEBUG] " + Ansi.AnsiColor("RESET", colorful_console) + dalog);
+		log(ChatColor.RED + "[DEBUG] " + ChatColor.RESET + dalog);
 	}
 	public void logWarn(String dalog){
-		log(ChatColor.RED + "[WARN] " + Ansi.AnsiColor("RESET", colorful_console)  + dalog);
+		log(ChatColor.RED + "[WARN] " + ChatColor.RESET  + dalog);
 	}
 }
