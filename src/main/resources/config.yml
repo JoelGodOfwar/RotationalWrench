@@ -1,5 +1,5 @@
 # DO NOT CHANGE VERSION
-version: 1.0.10
+version: 1.0.12
 
 # change to false to stop auto-update-check
 auto_update_check: true
@@ -26,6 +26,8 @@ enabled:
   anvil: true
 # Can players rotate armor stands?
   armorstands: true
+# Can players rotate banners?
+  banner: true
 # Can players rotate polished basalt?
   basalt: true
 # Can players rotate beds?
@@ -46,6 +48,8 @@ enabled:
   chain: true
 # Can players rotate chests?
   chests: true
+# Can players rotate coral fans?
+  coral: true
 # Can players rotate doors?
   doors: true
 # Can players rotate end rods?
