@@ -1,0 +1,16 @@
+<versions>
+  <release>
+    <version>1.14_1.0.7</version>
+    <notes>D1-Added 1.18.2 support to event handler.
+D2-Added 1.19 Mangrove Logs and Stripped Mangrove Logs.
+D3-Fixed error when clicking empty space with Wrench.</notes>
+    <link>https://www.spigotmc.org/resources/rotationalwrench.85119/history</link>
+  </release>
+  <developer>
+    <version>1.14_1.0.8.D3</version>
+    <notes>D1	Start of trying to add debug stick walls.
+D2	Further attempts at D1.
+D3	Added debug stick behavior to walls. 1.19.+ only</notes>
+    <link>https://discord.com/channels/654087250665144321/767230534853066752</link>
+  </developer>
+</versions>
