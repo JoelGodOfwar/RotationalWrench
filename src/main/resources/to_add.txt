@@ -1,0 +1,1 @@
+New UpdateChecker with trasnlations.
