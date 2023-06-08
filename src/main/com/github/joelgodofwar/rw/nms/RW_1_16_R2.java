@@ -65,6 +65,8 @@ import com.github.joelgodofwar.rw.util.StrUtils;
 import com.github.joelgodofwar.rw.util.Tags_116;
 import com.github.joelgodofwar.rw.util.YmlConfiguration;
 import com.google.common.collect.Lists;
+import com.palmergames.bukkit.towny.object.TownyPermission.ActionType;
+import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 
 @SuppressWarnings("deprecation")
 public class RW_1_16_R2 implements Listener{
@@ -149,7 +151,7 @@ public class RW_1_16_R2 implements Listener{
     public void onBlockClick(PlayerInteractEvent event) { // TODO: Top
         Block block = event.getClickedBlock();
         boolean onblacklist = false;
-        if(!event.getPlayer().hasPermission("rotationalwrench.use")){
+        if(!event.getPlayer().hasPermission("rotationalwrench.use") || block == null){
         	return;
         }
         onblacklist = StrUtils.stringContains(config.getString("blacklist", ""),event.getPlayer().getWorld().getName());
@@ -157,6 +159,15 @@ public class RW_1_16_R2 implements Listener{
         /** Spam filter */
         boolean isSpam = false;
         Player player = event.getPlayer();
+        if( event.getItem() != null ) { 
+        	if( event.getItem().equals(wrench) ) {
+        			if(!canPlayerTowny(player, block.getLocation(), block.getType() )) {
+        				return;	
+        			}
+        	}else {
+        		return;
+        	}
+        }
         long timer = 0;
 		long time = (System.currentTimeMillis() - 1497580000000L);
 		//log("time=" + time);
@@ -173,7 +184,7 @@ public class RW_1_16_R2 implements Listener{
 			if(debug){logDebug("spamfilter=" + spamtime);}
 			// if !time - timer > limit
 			if(!((time - timer) > spamtime)){
-				isSpam = true;
+				//isSpam = true; player.setPlayerListName(ChatColor.GRAY + player.getName());
 				//event.setCancelled(true);
 				return;
 			}else if((time - timer) > spamtime){
@@ -2289,7 +2300,8 @@ public class RW_1_16_R2 implements Listener{
         /** Stairs */ // TODO: Stairs
         if( !isSpam && event.getPlayer().isSneaking() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
         		event.getItem().equals(wrench) && !onblacklist &&  
-        		Tags_116.STAIRS.isTagged(block.getType()) && config.getBoolean("enabled.stairs.invert", true) ){
+        		block.getType().toString().contains("_STAIRS") && config.getBoolean("enabled.stairs.invert", true) ){
+        	// Tags_116.STAIRS.isTagged(block.getType()) && config.getBoolean("enabled.stairs.invert", true) ){
         	BlockState state = block.getState();
         	Stairs stairs = (Stairs) state.getBlockData();
         	//org.bukkit.block.data.type.Stairs.Shape shape = stairs.getShape();
@@ -2325,7 +2337,7 @@ public class RW_1_16_R2 implements Listener{
         	}
         }else if( !isSpam && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
         		event.getItem().equals(wrench) && !onblacklist &&  
-        		Tags_116.STAIRS.isTagged(block.getType()) && config.getBoolean("enabled.stairs.rotate", true) ){
+        		block.getType().toString().contains("_STAIRS") && config.getBoolean("enabled.stairs.rotate", true) ){
         	BlockState state = block.getState();
         	Directional stair = (Directional) block.getBlockData();
         	Stairs stairs = (Stairs) state.getBlockData();
@@ -2380,7 +2392,8 @@ public class RW_1_16_R2 implements Listener{
         /** Slabs */ // TODO: Slabs
         if( !isSpam && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getItem() != null && 
         		event.getItem().equals(wrench) && !onblacklist &&  
-        		Tags_116.SLABS.isTagged(block.getType()) && config.getBoolean("enabled.slabs", true) ){
+        		block.getType().toString().contains("_SLAB") && config.getBoolean("enabled.slabs", true) ){
+        	// block.getType().toString().contains("_STAIRS")	Tags_116.SLABS.isTagged(block.getType())
         	BlockState state = block.getState();
         	Slab slab = (Slab) state.getBlockData();
 			Type type = slab.getType();
@@ -3136,6 +3149,10 @@ public class RW_1_16_R2 implements Listener{
 		Entity entity = event.getRightClicked();
 		boolean onblacklist = false;
         onblacklist = StrUtils.stringContains(config.getString("blacklist", ""),event.getPlayer().getWorld().getName());
+        Block block = entity.getLocation().getBlock();
+        if(!canPlayerTowny(event.getPlayer(), entity.getLocation(), block.getType())) {
+        	return;
+        }
         /** Armor Stands */
         if( !event.getPlayer().isSneaking() && event.getPlayer().getInventory().getItemInMainHand().equals(wrench)  
         		&& entity instanceof ArmorStand && config.getBoolean("enabled.armorstands", true) &&  !onblacklist ){
@@ -3159,14 +3176,22 @@ public class RW_1_16_R2 implements Listener{
         }
 	}
 	
+	public boolean canPlayerTowny(Player player, Location location, Material material){
+		if(RW.getServer().getPluginManager().getPlugin("Towny") != null){
+			boolean bBuild = PlayerCacheUtil.getCachePermission(player, location, material, ActionType.DESTROY);
+			return bBuild;
+		}
+		return true;
+	}
+	
 	public	void log(String dalog){// TODO: log
 		PluginDescriptionFile pdfFile =  RW.getDescription();
 		logger.info(ChatColor.YELLOW + pdfFile.getName() + " v" + pdfFile.getVersion() + ChatColor.RESET + " " + dalog );
 	}
 	public	void logDebug(String dalog){
-		log(ChatColor.RED + "[DEBUG] " + Ansi.AnsiColor("RESET", colorful_console) + dalog);
+		log(ChatColor.RED + "[DEBUG] " + Ansi.RESET + dalog);
 	}
 	public void logWarn(String dalog){
-		log(ChatColor.RED + "[WARN] " + Ansi.AnsiColor("RESET", colorful_console)  + dalog);
+		log(ChatColor.RED + "[WARN] " + Ansi.RESET  + dalog);
 	}
 }

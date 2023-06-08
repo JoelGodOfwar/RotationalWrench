@@ -67,8 +67,9 @@ public class RotateHelper114 {
 		if( !Tags.CORAL.isTagged(block.getType()) == false){			return false;		}
 		if( !Tags.CORAL_WALL.isTagged(block.getType()) == false){			return false;		}
 		if( block.getType().isSolid() == false){			return false;		}
+		if( block.getType().toString().contains("PATH") ) {	return false;	}
 		if( !Tags.NO_SIGNS_TOP.isTagged(block.getType()) == false){			return true;		}
-		if( Tags.STAIRS.isTagged(block.getType()) ){			return true;		}
+		if( world.getBlockAt(X,Y,Z).getType().toString().contains("_STAIRS") ){			return true;		}
 		if( SameFacing(world, X, Y, Z, blockface)  == false){			return false;		}
     	return true;
     }
@@ -80,7 +81,7 @@ public class RotateHelper114 {
 		if( !Tags.CORAL_WALL.isTagged(block.getType()) == false){			return false;		}
 		if( block.getType().isSolid() == false){			return false;		}
 		if( !Tags.NO_SIGNS_SIDE.isTagged(block.getType()) == false){			return true;		}
-		if( Tags.STAIRS.isTagged(block.getType()) ){			return true;		}
+		if( world.getBlockAt(X,Y,Z).getType().toString().contains("_STAIRS") ){			return true;		}
 		if( SameHalf(world, X, Y, Z, blockface)  == false){			return false;		}
     	return true;
     }
@@ -94,7 +95,7 @@ public class RotateHelper114 {
 		
 		if( block.getType().isSolid() == false){			if(debug){logDebug(ChatColor.GREEN + "sVB Solid");}return false;		}
 		if( !Tags.NO_SIGNS_TOP.isTagged(block.getType()) == false){			if(debug){logDebug("sVB !SignTop");}return true;		}
-		if( Tags.STAIRS.isTagged(block.getType()) ){			return true;		}
+		if( world.getBlockAt(X,Y,Z).getType().toString().contains("_STAIRS") ){			return true;		}
 		if( Tags.TRAPDOORS.isTagged(block.getType()) ){			return true;		}
 		if( SameFacing(world, X, Y, Z, blockface)  == false){			if(debug){logDebug("sVB Facing");}return false;		}
     	return true;
@@ -108,7 +109,7 @@ public class RotateHelper114 {
 		}//*/
 		if( block.getType().isSolid() == false){			if(debug){logDebug("sVB2 Solid");}return false;		}
 		if( !Tags.NO_SIGNS_SIDE.isTagged(block.getType()) == false){			return true;		}
-		if( Tags.STAIRS.isTagged(block.getType()) ){			return true;		}
+		if( world.getBlockAt(X,Y,Z).getType().toString().contains("_STAIRS") ){			return true;		}
 		if( Tags.TRAPDOORS.isTagged(block.getType()) ){			return true;		}
 		if( SameHalf(world, X, Y, Z, blockface)  == false){			if(debug){logDebug("sVB2 Half");}return false;		}
     	return true;
@@ -154,7 +155,7 @@ public class RotateHelper114 {
 			if(debug){logDebug("bVB Solid");}return false;		}
 		if( !Tags.NO_BUTTONS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){
 			if(debug){logDebug("bVB Buttons");}return false;		}
-		if( ( block.getType().equals(Material.FARMLAND) || block.getType().equals(Material.GRASS_PATH) ) && blockface.equals(Half.BOTTOM) ){
+		if( ( block.getType().equals(Material.FARMLAND) || block.getType().toString().contains("PATH") ) && blockface.equals(Half.BOTTOM) ){
 			return true;
 		}
 		if( !Tags.SIGNS.isTagged(world.getBlockAt(X, Y, Z).getType()) == false){
@@ -201,14 +202,14 @@ public class RotateHelper114 {
 
 		if( !Tags.SIGNS2.isTagged(block.getType()) == false){
 			if(debug){logDebug("tVB Signs2 " + block.getType().toString());}return false;		}
-
+		if( block.getType().toString().contains("PATH") ) {	return false;	}
 		if( !Tags.NO_TORCH_SIDE.isTagged(block.getType()) == false){
 			if(debug){logDebug("tVB !Torch Side " + block.getType().toString());}return false;		}
 
 		if( SameFacing(world, X, Y, Z, blockface)  == false){
 			if(debug){logDebug("tVB Facing " + block.getType().toString());}return false;		}
 
-		if( !Tags.SLABS.isTagged(block.getType()) == false){
+		if( block.getType().toString().contains("_SLAB") ){
 			Slab slab = (Slab) block.getState().getBlockData();
 			if(!slab.getType().equals(Slab.Type.DOUBLE)){
 				if(debug){logDebug("tVB Slabs " + block.getType().toString());}return false;
@@ -260,11 +261,12 @@ public class RotateHelper114 {
 			if(debug){logDebug("tVB2 !Signs");}return false;		}
 		if( !Tags.SIGNS2.isTagged(block.getType()) == false){
 			if(debug){logDebug("tVB2 !Signs2");}return false;		}
+		if( block.getType().toString().contains("PATH") ) {	return false;	}
 		if( !Tags.NO_TORCH_TOP.isTagged(block.getType()) == false){
 			if(debug){logDebug("tVB2 !Torch Top");}return false;		}
 		if( SameHalf(world, X, Y, Z, blockface)  == false){
 			if(debug){logDebug("tVB2 !Half");}return false;		}
-		if( !Tags.SLABS.isTagged(block.getType()) == false){
+		if( block.getType().toString().contains("_SLAB") ){
 			Slab slab = (Slab) block.getState().getBlockData();
 			if(!slab.getType().equals(Slab.Type.DOUBLE) && !slab.getType().equals(Slab.Type.TOP) ){
 				if(debug){logDebug("tVB2 !Slabs");}return false;		}}
@@ -272,7 +274,7 @@ public class RotateHelper114 {
     }
 	
 	public boolean SameFacing(World world, int X, int Y, int Z, BlockFace blockface){
-		if( Tags.STAIRS.isTagged(world.getBlockAt(X,Y,Z).getType()) && 
+		if( world.getBlockAt(X,Y,Z).getType().toString().contains("_STAIRS") && 
 				!((Directional) world.getBlockAt(X,Y,Z).getState().getBlockData()).getFacing().equals(blockface)){
 			return false;
 		}else if( Tags.TRAPDOORS.isTagged(world.getBlockAt(X,Y,Z).getType()) ){
@@ -293,7 +295,7 @@ public class RotateHelper114 {
 	public boolean SameHalf(World world, int X, int Y, int Z, Half blockface){
 		Type blockface2 = null;
 		//half.equals(Half.BOTTOM)
-		if( Tags.STAIRS.isTagged(world.getBlockAt(X,Y,Z).getType()) ){
+		if( world.getBlockAt(X,Y,Z).getType().toString().contains("_STAIRS") ){
 			Block block = world.getBlockAt(X,Y,Z);
 			BlockState state = block.getState();
 	    	Stairs stairs = (Stairs) state.getBlockData();
@@ -301,7 +303,8 @@ public class RotateHelper114 {
 			if(!half.equals(blockface)){
 				return false;
 			}
-		}else if( Tags.SLABS.isTagged(world.getBlockAt(X,Y,Z).getType()) ){
+		}else if( world.getBlockAt(X,Y,Z).getType().toString().contains("_SLAB") ){
+			// block.getType().toString().contains("_SLAB")
 			if(blockface.equals(Bisected.Half.BOTTOM)){
 				blockface2 = Slab.Type.BOTTOM;
 			}else if(blockface.equals(Bisected.Half.TOP)){

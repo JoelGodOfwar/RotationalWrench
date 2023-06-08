@@ -55,7 +55,8 @@ public class YmlConfiguration extends YamlConfiguration {
         }
     }
  
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public String saveToString(){
         yamlOptions.setIndent(options().indent());
         yamlOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -84,7 +85,8 @@ public class YmlConfiguration extends YamlConfiguration {
         return header.length() > 0 ? header + dump : dump;
     }
  
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void load(Reader reader) throws IOException, InvalidConfigurationException {
         BufferedReader input = reader instanceof BufferedReader ? (BufferedReader) reader : new BufferedReader(reader);
  

@@ -325,7 +325,7 @@ public class Tags {
 			Material.DARK_OAK_FENCE_GATE,	Material.JUNGLE_FENCE_GATE,
 			Material.SPRUCE_FENCE_GATE,
 			
-    		Material.GRASS_PATH,			Material.GRINDSTONE,			Material.IRON_BARS,
+    		Material.GRINDSTONE,			Material.IRON_BARS,
     		Material.LANTERN,				
     		Material.OAK_LEAVES, 			Material.ACACIA_LEAVES, 		Material.BIRCH_LEAVES,
 			Material.DARK_OAK_LEAVES,		Material.JUNGLE_LEAVES,			Material.SPRUCE_LEAVES,
@@ -374,7 +374,6 @@ public class Tags {
 			Material.DARK_OAK_FENCE_GATE,	Material.JUNGLE_FENCE_GATE,
 			Material.SPRUCE_FENCE_GATE,
 			
-    		Material.GRASS_PATH,							
     		Material.LANTERN,				
     		Material.OAK_LEAVES, 			Material.ACACIA_LEAVES, 		Material.BIRCH_LEAVES,
 			Material.DARK_OAK_LEAVES,		Material.JUNGLE_LEAVES,			Material.SPRUCE_LEAVES,
@@ -434,7 +433,7 @@ public class Tags {
 			Material.BIRCH_BUTTON,			Material.JUNGLE_BUTTON,			Material.ACACIA_BUTTON,
 			Material.DARK_OAK_BUTTON,		
 			
-			Material.LEVER,					Material.GRASS_PATH,
+			Material.LEVER,
 			Material.TORCH,					Material.REDSTONE_TORCH,
 			Material.WALL_TORCH,			Material.REDSTONE_WALL_TORCH
     );

@@ -5,7 +5,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 
 @SuppressWarnings("deprecation")
-public class Tags_116 {
+public class Tags_117 {
 	public static final Tag<Material> ANVIL = new MaterialSetTag(NamespacedKey.randomKey(),
 			Material.ANVIL, Material.CHIPPED_ANVIL, Material.DAMAGED_ANVIL
     ); // 1.11
@@ -94,6 +94,10 @@ public class Tags_116 {
 			Material.CRIMSON_DOOR,	Material.WARPED_DOOR
 	); // 1.16
 	
+	public static final Tag<Material> LIGHTNING_ROD = new MaterialSetTag(NamespacedKey.randomKey(),
+			Material.LIGHTNING_ROD
+    ); // 1.17
+	
 	public static final Tag<Material> END_ROD = new MaterialSetTag(NamespacedKey.randomKey(),
 			Material.END_ROD
     ); // 1.11
@@ -102,7 +106,7 @@ public class Tags_116 {
 			Material.OAK_FENCE_GATE, 		Material.ACACIA_FENCE_GATE, 	Material.BIRCH_FENCE_GATE,
 			Material.DARK_OAK_FENCE_GATE,	Material.JUNGLE_FENCE_GATE,
 			Material.SPRUCE_FENCE_GATE,
-			Material.CRIMSON_FENCE_GATE,	 	Material.WARPED_FENCE_GATE
+			Material.CRIMSON_FENCE_GATE,	Material.WARPED_FENCE_GATE
 	); // 1.16
 
     public static final Tag<Material> GLAZED_TERRACOTTA = new MaterialSetTag(NamespacedKey.randomKey(),
@@ -186,35 +190,43 @@ public class Tags_116 {
     ); // 1.11
     
     public static final Tag<Material> SLABS = new MaterialSetTag(NamespacedKey.randomKey(),
-    		Material.PURPUR_SLAB,					Material.OAK_SLAB,					Material.COBBLESTONE_SLAB,
-        	Material.BRICK_SLAB,					Material.STONE_BRICK_SLAB,			Material.NETHER_BRICK_SLAB,
-        	Material.SPRUCE_SLAB,					Material.BIRCH_SLAB,				Material.JUNGLE_SLAB,					
-        	Material.QUARTZ_SLAB,					Material.ACACIA_SLAB,				Material.DARK_OAK_SLAB,
-        	Material.PRISMARINE_SLAB,				Material.PRISMARINE_BRICK_SLAB,		Material.DARK_PRISMARINE_SLAB,
-        	Material.POLISHED_GRANITE_SLAB,			Material.SMOOTH_RED_SANDSTONE_SLAB,	Material.MOSSY_STONE_BRICK_SLAB,
-        	Material.POLISHED_DIORITE_SLAB,			Material.MOSSY_COBBLESTONE_SLAB,	Material.END_STONE_BRICK_SLAB,
-        	Material.STONE_SLAB,					Material.SMOOTH_SANDSTONE_SLAB,		Material.SMOOTH_QUARTZ_SLAB,
-        	Material.GRANITE_SLAB,					Material.ANDESITE_SLAB,				Material.RED_NETHER_BRICK_SLAB,
+    		Material.PURPUR_SLAB,					Material.OAK_SLAB,							Material.COBBLESTONE_SLAB,
+        	Material.BRICK_SLAB,					Material.STONE_BRICK_SLAB,					Material.NETHER_BRICK_SLAB,
+        	Material.SPRUCE_SLAB,					Material.BIRCH_SLAB,						Material.JUNGLE_SLAB,					
+        	Material.QUARTZ_SLAB,					Material.ACACIA_SLAB,						Material.DARK_OAK_SLAB,
+        	Material.PRISMARINE_SLAB,				Material.PRISMARINE_BRICK_SLAB,				Material.DARK_PRISMARINE_SLAB,
+        	Material.POLISHED_GRANITE_SLAB,			Material.SMOOTH_RED_SANDSTONE_SLAB,			Material.MOSSY_STONE_BRICK_SLAB,
+        	Material.POLISHED_DIORITE_SLAB,			Material.MOSSY_COBBLESTONE_SLAB,			Material.END_STONE_BRICK_SLAB,
+        	Material.STONE_SLAB,					Material.SMOOTH_SANDSTONE_SLAB,				Material.SMOOTH_QUARTZ_SLAB,
+        	Material.GRANITE_SLAB,					Material.ANDESITE_SLAB,						Material.RED_NETHER_BRICK_SLAB,
         	Material.POLISHED_ANDESITE_SLAB,		Material.DIORITE_SLAB,
     		Material.SANDSTONE_SLAB,				Material.RED_SANDSTONE_SLAB,
-    		Material.BLACKSTONE_SLAB,				Material.POLISHED_BLACKSTONE_SLAB,	Material.POLISHED_BLACKSTONE_BRICK_SLAB,
-    		Material.CRIMSON_SLAB,					Material.WARPED_SLAB
+    		Material.BLACKSTONE_SLAB,				Material.POLISHED_BLACKSTONE_SLAB,			Material.POLISHED_BLACKSTONE_BRICK_SLAB,
+    		Material.CRIMSON_SLAB,					Material.WARPED_SLAB,
+        	Material.DEEPSLATE_BRICK_SLAB,			Material.DEEPSLATE_TILE_SLAB,				Material.COBBLED_DEEPSLATE_SLAB,
+        	Material.POLISHED_DEEPSLATE_SLAB,		Material.CUT_COPPER_SLAB,					Material.EXPOSED_CUT_COPPER_SLAB,
+        	Material.WEATHERED_CUT_COPPER_SLAB,		Material.OXIDIZED_CUT_COPPER_SLAB,			Material.WAXED_CUT_COPPER_SLAB,
+        	Material.WAXED_EXPOSED_CUT_COPPER_SLAB,	Material.WAXED_WEATHERED_CUT_COPPER_SLAB,	Material.WAXED_OXIDIZED_CUT_COPPER_SLAB
     ); // 1.16
     
     public static final Tag<Material> STAIRS = new MaterialSetTag(NamespacedKey.randomKey(),
-    	Material.PURPUR_STAIRS,					Material.OAK_STAIRS,					Material.COBBLESTONE_STAIRS,
-    	Material.BRICK_STAIRS,					Material.STONE_BRICK_STAIRS,			Material.NETHER_BRICK_STAIRS,
-    	Material.SANDSTONE_STAIRS,				Material.SPRUCE_STAIRS,					Material.BIRCH_STAIRS,
-    	Material.JUNGLE_STAIRS,					Material.QUARTZ_STAIRS,					Material.ACACIA_STAIRS,
-    	Material.DARK_OAK_STAIRS,				Material.PRISMARINE_STAIRS,				Material.PRISMARINE_BRICK_STAIRS,
-    	Material.DARK_PRISMARINE_STAIRS,		Material.RED_SANDSTONE_STAIRS,			Material.POLISHED_GRANITE_STAIRS,
-    	Material.SMOOTH_RED_SANDSTONE_STAIRS,	Material.MOSSY_STONE_BRICK_STAIRS,		Material.POLISHED_DIORITE_STAIRS,
-    	Material.MOSSY_COBBLESTONE_STAIRS,		Material.END_STONE_BRICK_STAIRS,		Material.STONE_STAIRS,
-    	Material.SMOOTH_SANDSTONE_STAIRS,		Material.SMOOTH_QUARTZ_STAIRS,			Material.GRANITE_STAIRS,
-    	Material.ANDESITE_STAIRS,				Material.RED_NETHER_BRICK_STAIRS,		Material.POLISHED_ANDESITE_STAIRS,
+    	Material.PURPUR_STAIRS,						Material.OAK_STAIRS,						Material.COBBLESTONE_STAIRS,
+    	Material.BRICK_STAIRS,						Material.STONE_BRICK_STAIRS,				Material.NETHER_BRICK_STAIRS,
+    	Material.SANDSTONE_STAIRS,					Material.SPRUCE_STAIRS,						Material.BIRCH_STAIRS,
+    	Material.JUNGLE_STAIRS,						Material.QUARTZ_STAIRS,						Material.ACACIA_STAIRS,
+    	Material.DARK_OAK_STAIRS,					Material.PRISMARINE_STAIRS,					Material.PRISMARINE_BRICK_STAIRS,
+    	Material.DARK_PRISMARINE_STAIRS,			Material.RED_SANDSTONE_STAIRS,				Material.POLISHED_GRANITE_STAIRS,
+    	Material.SMOOTH_RED_SANDSTONE_STAIRS,		Material.MOSSY_STONE_BRICK_STAIRS,			Material.POLISHED_DIORITE_STAIRS,
+    	Material.MOSSY_COBBLESTONE_STAIRS,			Material.END_STONE_BRICK_STAIRS,			Material.STONE_STAIRS,
+    	Material.SMOOTH_SANDSTONE_STAIRS,			Material.SMOOTH_QUARTZ_STAIRS,				Material.GRANITE_STAIRS,
+    	Material.ANDESITE_STAIRS,					Material.RED_NETHER_BRICK_STAIRS,			Material.POLISHED_ANDESITE_STAIRS,
     	Material.DIORITE_STAIRS,
-    	Material.BLACKSTONE_STAIRS,				Material.POLISHED_BLACKSTONE_STAIRS,	Material.POLISHED_BLACKSTONE_BRICK_STAIRS,
-    	Material.CRIMSON_STAIRS,				Material.WARPED_STAIRS
+    	Material.BLACKSTONE_STAIRS,					Material.POLISHED_BLACKSTONE_STAIRS,		Material.POLISHED_BLACKSTONE_BRICK_STAIRS,
+    	Material.CRIMSON_STAIRS,					Material.WARPED_STAIRS,
+    	Material.DEEPSLATE_BRICK_STAIRS,			Material.DEEPSLATE_TILE_STAIRS,				Material.COBBLED_DEEPSLATE_STAIRS,
+    	Material.POLISHED_DEEPSLATE_STAIRS,			Material.CUT_COPPER_STAIRS,					Material.EXPOSED_CUT_COPPER_STAIRS,
+    	Material.WEATHERED_CUT_COPPER_STAIRS,		Material.OXIDIZED_CUT_COPPER_STAIRS,		Material.WAXED_CUT_COPPER_STAIRS,
+    	Material.WAXED_EXPOSED_CUT_COPPER_STAIRS,	Material.WAXED_WEATHERED_CUT_COPPER_STAIRS,	Material.WAXED_OXIDIZED_CUT_COPPER_STAIRS
     ); // 1.16
 	
 	public static final Tag<Material> TORCH = new MaterialSetTag(NamespacedKey.randomKey(),
@@ -348,7 +360,7 @@ public class Tags_116 {
 			Material.DARK_OAK_FENCE_GATE,	Material.JUNGLE_FENCE_GATE,
 			Material.SPRUCE_FENCE_GATE,
 			Material.CRIMSON_FENCE_GATE,	Material.WARPED_FENCE_GATE,
-    		Material.GRINDSTONE,			Material.IRON_BARS,
+    		Material.DIRT_PATH,				Material.GRINDSTONE,			Material.IRON_BARS,
     		Material.LANTERN,				Material.SOUL_LANTERN,
     		Material.OAK_LEAVES, 			Material.ACACIA_LEAVES, 		Material.BIRCH_LEAVES,
 			Material.DARK_OAK_LEAVES,		Material.JUNGLE_LEAVES,			Material.SPRUCE_LEAVES,
@@ -397,7 +409,7 @@ public class Tags_116 {
 			Material.DARK_OAK_FENCE_GATE,	Material.JUNGLE_FENCE_GATE,
 			Material.SPRUCE_FENCE_GATE,
 			Material.CRIMSON_FENCE_GATE,	Material.WARPED_FENCE_GATE,
-			
+    		Material.DIRT_PATH,							
     		Material.LANTERN,				Material.SOUL_LANTERN,
     		Material.OAK_LEAVES, 			Material.ACACIA_LEAVES, 		Material.BIRCH_LEAVES,
 			Material.DARK_OAK_LEAVES,		Material.JUNGLE_LEAVES,			Material.SPRUCE_LEAVES,
@@ -457,7 +469,7 @@ public class Tags_116 {
 			Material.BIRCH_BUTTON,			Material.JUNGLE_BUTTON,			Material.ACACIA_BUTTON,
 			Material.DARK_OAK_BUTTON,		Material.CRIMSON_BUTTON,		Material.WARPED_BUTTON,
 			Material.POLISHED_BLACKSTONE_BUTTON,
-			Material.LEVER,
+			Material.LEVER,					Material.DIRT_PATH,
 			Material.TORCH,					Material.SOUL_TORCH,			Material.REDSTONE_TORCH,
 			Material.WALL_TORCH,			Material.SOUL_WALL_TORCH,		Material.REDSTONE_WALL_TORCH
     );
