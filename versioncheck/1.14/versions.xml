@@ -7,10 +7,13 @@ D3-Fixed error when clicking empty space with Wrench.</notes>
     <link>https://www.spigotmc.org/resources/rotationalwrench.85119/history</link>
   </release>
   <developer>
-    <version>1.14_1.0.8.D3</version>
+    <version>1.14_1.0.8.D6</version>
     <notes>D1	Start of trying to add debug stick walls.
 D2	Further attempts at D1.
-D3	Added debug stick behavior to walls. 1.19.+ only</notes>
+D3	Added debug stick behavior to walls. 1.19.+ only
+D4	Switched to i18n lang files, reworked update checker.
+D5	Added 1.20 Materials. Added ActionBar messages to HangingSigns/WallHangingsigns, and Walls.
+D6	Added missing Bamboo block and Stripped Bamboo block to Logs.</notes>
     <link>https://discord.com/channels/654087250665144321/767230534853066752</link>
   </developer>
 </versions>
