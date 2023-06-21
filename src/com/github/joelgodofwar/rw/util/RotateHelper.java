@@ -65,8 +65,8 @@ public class RotateHelper {
 		}
 	}
 	
-    public static BlockFace getClosestFace(Block b, Player p) {
-		float direction = (float) Math.toDegrees(Math.atan2(p.getLocation().getBlockX() - b.getX(), b.getZ() - p.getLocation().getBlockZ()));
+    public static BlockFace getClosestFace(Block block, Player player) {
+		float direction = (float) Math.toDegrees(Math.atan2(player.getLocation().getBlockX() - block.getX(), block.getZ() - player.getLocation().getBlockZ()));
         direction = direction % 360;
 
         if (direction < 0)
@@ -406,6 +406,10 @@ public class RotateHelper {
 			return Material.CRIMSON_WALL_SIGN;
 		case WARPED_SIGN:
 			return Material.WARPED_WALL_SIGN;
+		case CHERRY_SIGN:
+			return Material.CHERRY_WALL_SIGN;
+		case BAMBOO_SIGN:
+			return Material.BAMBOO_WALL_SIGN;
 			
 		case OAK_WALL_SIGN:
 			return Material.OAK_SIGN;
@@ -423,6 +427,10 @@ public class RotateHelper {
 			return Material.CRIMSON_SIGN;
 		case WARPED_WALL_SIGN:
 			return Material.WARPED_SIGN;
+		case CHERRY_WALL_SIGN:
+			return Material.CHERRY_SIGN;
+		case BAMBOO_WALL_SIGN:
+			return Material.BAMBOO_SIGN;
 			
 		case WHITE_BANNER:
 			return Material.WHITE_WALL_BANNER;

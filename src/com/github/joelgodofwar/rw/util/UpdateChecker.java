@@ -6,7 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.apache.commons.lang.math.NumberUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -103,15 +103,15 @@ public class UpdateChecker {
 	            //System.out.println(a); 
 			//System.out.println("string2=" + string2.toString());
 			//System.out.println("string2.length=" + string2.length);
-			this.Major = NumberUtils.toInt(string2[0]);
-			this.Minor = NumberUtils.toInt(string2[1]);
-			this.Patch = NumberUtils.toInt(string2[2]);
+			this.Major = Integer.parseInt(string2[0]);
+			this.Minor = Integer.parseInt(string2[1]);
+			this.Patch = Integer.parseInt(string2[2]);
 			if(string2.length >= 4){
 				if(string2[3].toUpperCase().contains("D")){
 					isDev =  true;
 					string2[3] = string2[3].toUpperCase().replace("D", "");
 				}
-				this.Build = NumberUtils.toInt(string2[3]);
+				this.Build = Integer.parseInt(string2[3]);
 			}else{
 				this.Build = 0;
 			}

@@ -30,11 +30,11 @@ import com.google.common.base.Charsets;
  * @project: WarpConverter
  * 
  */
- 
+@SuppressWarnings("deprecation")
 public class YmlConfiguration extends YamlConfiguration {
  
     private final DumperOptions yamlOptions = new DumperOptions();
-    private final Representer yamlRepresenter = new YamlRepresenter();
+	private final Representer yamlRepresenter = new YamlRepresenter();
     private final Yaml yaml = new Yaml(new YamlConstructor(), yamlRepresenter, yamlOptions);
     private Map<Integer, String> commentContainer = new HashMap<>();
  

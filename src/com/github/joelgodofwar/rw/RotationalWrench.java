@@ -44,6 +44,7 @@ import com.github.joelgodofwar.rw.nms.RW_1_14_R1;
 import com.github.joelgodofwar.rw.nms.RW_1_16_R2;
 import com.github.joelgodofwar.rw.nms.RW_1_17_R1;
 import com.github.joelgodofwar.rw.nms.RW_1_19_R1;
+import com.github.joelgodofwar.rw.nms.RW_1_20_R1;
 import com.github.joelgodofwar.rw.util.FileStuff;
 import com.github.joelgodofwar.rw.util.Metrics;
 import com.github.joelgodofwar.rw.util.StrUtils;
@@ -276,7 +277,9 @@ public class RotationalWrench extends JavaPlugin implements Listener{
         String packageName = this.getServer().getClass().getPackage().getName();
     	String version = packageName.substring(packageName.lastIndexOf('.') + 2);
     	if(debug)logDebug("version=" + version);
-    	if( version.contains("1_19_R") ){
+    	if( version.contains("1_20_R") ){
+			getServer().getPluginManager().registerEvents( new RW_1_20_R1(this), this);
+    	}else if( version.contains("1_19_R") ){
 			getServer().getPluginManager().registerEvents( new RW_1_19_R1(this), this);
     	}else if( version.contains("1_17_R1") || version.contains("1_18_R1")  || version.contains("1_18_R2") ){
 			getServer().getPluginManager().registerEvents( new RW_1_17_R1(this), this);
