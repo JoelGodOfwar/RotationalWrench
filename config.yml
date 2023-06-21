@@ -1,0 +1,115 @@
+# DO NOT CHANGE VERSION
+version: 1.0.16
+# 
+# change to false to stop auto-update-check
+auto_update_check: true
+# 
+# set to true before sending a log about an issue.
+# logs trace data required to pinpoint where errors are.
+debug: false
+# 
+# Language Selection - Not currently used.
+lang: en_US
+# 
+# Enables fancy ANSI colors in console. (Disable if you're getting weird characters in the console)
+colorful_console: true
+# 
+# Number of milliseconds between clicks, to prevent click spam. 1000 is 1 second
+spamfilter: 250
+# 
+# Enabled
+enabled:
+# Can players rotate anvils?
+  anvil: true
+# Can players rotate armor stands?
+  armorstands: true
+# Can players rotate banners?
+  banner: true
+# Can players rotate polished basalt?
+  basalt: true
+# Can players rotate beds?
+  beds: true
+# Can players rotate beehives and bee nests?
+  bee: true
+# Can players rotate bells?
+  bell: true
+# Can players rotate bone blocks?
+  bone: true
+# Can players rotate buttons?
+  buttons: true
+# Can players rotate campfires?
+  campfires: true
+# Can players rotate carved pumpkins and jack-0-lanterns?
+  carvedpumpkin: true
+# Can players rotate chain?
+  chain: true
+# Can players rotate chests?
+  chests: true
+# Can players rotate coral fans?
+  coral: true
+# Can players rotate doors?
+  doors: true
+# Can players rotate end rods?
+  endrod: true
+# Can players rotate fence gates?
+  fencegates: true
+# Can players rotate heads?
+  heads: true
+# Can players rotate ladders?
+  ladder: true
+# Can players rotate lanterns?
+  lantern: true
+# Can players rotate lightning rods?
+  lightning_rod: true
+# Can players rotate logs?
+  logs: true
+# Can players rotate pillars?
+  pillars: true
+# Can players rotate rails?
+  rails: true
+# Can players rotate redstone?
+  redstone: true
+# Can players rotate shulker boxes?
+  shulker: true
+# Can players rotate signs?
+  signs: true
+# Can players invert slabs?
+  slabs: true
+# Can players rotate stairs?
+  stairs:
+    rotate: true
+    invert: true
+# Can players rotate terracotta?
+  terracotta: true
+# Can players rotate torches?
+  torch: true
+# Can players rotate trapdoors?
+  trapdoors:
+    rotate: true
+    invert: true
+# Can players modify walls?
+  walls: true
+# Can players rotate workstations?
+  workstations: true
+# 
+# Still to do,  fixed double chests sortof
+wrench_recipe:
+# Shape has this format "123","456","789" Where 1 is the upper left, and 9 is the lower right.
+# Default recipe is " g "," gg","i  "; g:GOLD_INGOT; i:IRONINGOT
+  shape:
+    - ' g '
+    - ' gg'
+    - 'i  '
+# Requires at least one ingredient.    
+  ingredients:
+   - 'g:GOLD_INGOT'
+   - 'i:IRON_INGOT'
+# Should the wrench be Unbreakable?
+  unbreakable: true
+# Translation of RotationalWrench
+  translation: Rotational Wrench
+# 
+# List of worlds that player's can not use RotationalWrench. CaSe sensitive (world, world_nether, world_the_end)
+blacklist: 
+  
+  

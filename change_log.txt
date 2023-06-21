@@ -1,0 +1,27 @@
+1.14_1.0.9
+D1	
+1.14_1.0.8
+D1	Start of trying to add debug stick walls.
+D2	Further attempts at D1.
+D3	Added debug stick behavior to walls. 1.19.+ only
+D4	Switched to i18n lang files, reworked update checker.
+D5	Added 1.20 Materials. Added ActionBar messages to HangingSigns/WallHangingsigns, and Walls.
+D6	Added missing Bamboo block and Stripped Bamboo block to Logs.
+1.14_1.0.7
+D1-Added 1.18.2 support to event handler.
+D2-Added 1.19 Mangrove Logs and Stripped Mangrove Logs.
+D3-Fixed error when clicking empty space with Wrench.
+1.14_1.0.6
+D1-Testing Towny support for 1.17
+D2-3 Added Armorstand and 1.14-1.17 support for Towny.
+D4-Added a check to the Towny check that only players using the wrench are checked.
+D5-Added 1.18 to 1.17 event handler.
+D6-Added Null check to Towny check to prevent NPE.
+1.14_1.0.5
+D1-Added ability to change the shaped recipe
+D2-Added configs for wrench translation, and unbreakable.
+D3-Added recipe loader to reload command.
+D4-Fixed issue #5 BUG right click action on a non-rotatable block changes player displayname color
+1.14_1.0.4
+D1-Fixed 1.17 slabs and stairs.
+D2-Added Lightning_Rod support.
