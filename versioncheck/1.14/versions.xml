@@ -10,9 +10,12 @@ D6	Added missing Bamboo block and Stripped Bamboo block to Logs.</notes>
     <link>https://www.spigotmc.org/resources/rotationalwrench.85119/history</link>
   </release>
   <developer>
-    <version>1.14_1.0.9.D2</version>
+    <version>1.14_1.0.9.D5</version>
     <notes>D1	Removed Birthday Message code.
-D2	Added better error and log handling</notes>
+D2	Added better error and log handling
+D3	Fixed broken Paper code
+D4	1.21 Added to allowable versions.
+D5	Added 1.21 blocks.</notes>
     <link>https://discord.com/channels/654087250665144321/767230534853066752</link>
   </developer>
 </versions>
