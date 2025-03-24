@@ -9,7 +9,7 @@ D5	Added 1.21 blocks.</notes>
     <link>https://www.spigotmc.org/resources/rotationalwrench.85119/history</link>
   </release>
   <developer>
-    <version>1.14_1.0.10.D8</version>
+    <version>1.14_1.0.10.D10</version>
     <notes>D1	Fixed reload command.
 D2	Fixed texture pack.
 D3	1.14-1.20.6 texture packs fixed.
@@ -17,7 +17,9 @@ D4	Fixed issue with name translation in config file.
 D5	Fixed issue with update command. Texture cmd now provides a download link and not auto set texture.
 D6	Added a better blacklist checker for worlds.
 D7	Added 1.21.3+ event handler, added Pale Oak logs. New MC versions should not break plugin anymore.
-D8	Fixed new Event Handler to actually use name of Material.</notes>
+D8	Fixed new Event Handler to actually use name of Material.
+D9	Fixed 1.21 Resourcepacks.
+D10	Fixed all resource packs to work with 1.14 to 1.21.4</notes>
     <link>https://discord.com/channels/654087250665144321/767230534853066752</link>
   </developer>
 </versions>
