@@ -9,7 +9,7 @@ D5	Added 1.21 blocks.</notes>
     <link>https://www.spigotmc.org/resources/rotationalwrench.85119/history</link>
   </release>
   <developer>
-    <version>1.14_1.0.10.D11</version>
+    <version>1.14_1.0.10.D12</version>
     <notes>D1	Fixed reload command.
 D2	Fixed texture pack.
 D3	1.14-1.20.6 texture packs fixed.
@@ -20,8 +20,9 @@ D7	Added 1.21.3+ event handler, added Pale Oak logs. New MC versions should not 
 D8	Fixed new Event Handler to actually use name of Material.
 D9	Fixed 1.21 Resourcepacks.
 D10	Fixed all resource packs to work with 1.14 to 1.21.4
-D11    Added a check on join to auto swap wrenches from carrot_on_a_stick to the new stick wrench,
-      if they have the permission rotationalwrench.updatewrench, you must give it to them for it to work.</notes>
+D11	Added a check on join to auto swap wrenches from carrot_on_a_stick to the new stick wrench,
+	if they have the permission rotationalwrench.updatewrench, you must give it to them for it to work.
+D12	Returned Wrench item back to carrot_on_a_stick. Undid D11.</notes>
     <link>https://discord.com/channels/654087250665144321/767230534853066752</link>
   </developer>
 </versions>
