@@ -9,8 +9,9 @@ D4  Max version now 26.2</notes>
     <link>https://www.spigotmc.org/resources/rotationalwrench.85119/history</link>
   </release>
   <developer>
-    <version>1.20_1.0.12.D1</version>
-    <notes>D1    Fixed an issue with debug logging.</notes>
+    <version>1.20_1.0.12.D2</version>
+    <notes>D1  Fixed an issue with debug logging.
+D2  Added a bunch of blocks that were missing.</notes>
     <link>https://discord.com/channels/654087250665144321/767230534853066752</link>
   </developer>
 </versions>
