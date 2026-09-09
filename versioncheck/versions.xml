@@ -1,0 +1,18 @@
+<versions>
+  <v1.20>
+    <release>
+      <version>1.14_1.0.12</version>
+      <notes>D1  Fixed an issue with debug logging.
+D2  Added a bunch of blocks that were missing.
+D3  Separated Wrench recipe from config.yml, added shapeless option.</notes>
+      <link>https://dev.bukkit.org/projects/rotationalwrench/files</link>
+    </release>
+    <developer>
+      <version>1.20_1.0.12.D3</version>
+      <notes>D1  Fixed an issue with debug logging.
+D2  Added a bunch of blocks that were missing.
+D3  Separated Wrench recipe from config.yml, added shapeless option.</notes>
+      <link>https://dev.bukkit.org/projects/rotationalwrench/files</link>
+    </developer>
+  </v1.20>
+</versions>
