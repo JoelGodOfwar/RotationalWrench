@@ -1,0 +1,32 @@
+name: RotationalWrench
+main: com.github.joelgodofwar.rw.RotationalWrench
+version: 1.20_1.0.13.D2
+author: JoelYahwehOfWar
+api-version: 1.20
+
+commands:
+  RWrench:
+    description: Shows RotationalWrench help.
+    usage: /<command>
+
+permissions:
+  rotationalwrench.use:
+    description: Allows a player to use the RotationalWrench item.
+    default: true
+  rotationalwrench.showUpdateAvailable:
+    description: Shows player that there is a version update.
+    default: op
+  rotationalwrench.reload:
+    description: Allows the player to use "/rwrench reload" command.
+    default: op
+  rotationalwrench.toggledebug:
+    description: Allows the player to use "/rwrench toggledebug" command.
+    default: op
+  rotationalwrench.admin:
+    description: Master admin permission. Grants all RotationalWrench permissions.
+    default: op
+    children:
+      rotationalwrench.use: true
+      rotationalwrench.reload: true
+      rotationalwrench.toggledebug: true
+      rotationalwrench.showUpdateAvailable: true

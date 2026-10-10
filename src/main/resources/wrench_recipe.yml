@@ -1,0 +1,25 @@
+#
+version: 1.0.0
+enabled: true
+unbreakable: true
+translation: Rotational Wrench
+
+# Choose ONE: SHAPED or SHAPELESS
+type: SHAPED
+
+# ==================== SHAPED RECIPE ====================
+shaped:
+  shape:
+    - " g "
+    - " gg"
+    - "i  "
+  ingredients:
+    - "g:GOLD_INGOT"
+    - "i:IRON_INGOT"
+
+# ==================== SHAPELESS RECIPE ====================
+shapeless:
+  ingredients:
+    - "GOLD_NUGGET"
+    - "IRON_NUGGET"
+    - "CARROT_ON_A_STICK"

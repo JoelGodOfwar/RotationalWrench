@@ -1,0 +1,49 @@
+# DO NOT CHANGE VERSION
+version: 1.0.19
+auto_update_check: true
+debug: false
+lang: en_US
+colorful_console: true
+spamfilter: 250
+auto_apply_resource_pack: false
+enabled:
+  anvil: true
+  armorstands: true
+  banner: true
+  basalt: true
+  beds: true
+  bee: true
+  bell: true
+  bone: true
+  buttons: true
+  campfires: true
+  carvedpumpkin: true
+  chain: true
+  chests: true
+  coral: true
+  doors: true
+  endrod: true
+  fencegates: true
+  heads: true
+  ladder: true
+  lantern: true
+  lightning_rod: true
+  logs: true
+  pillars: true
+  rails: true
+  redstone: true
+  shelfs: true
+  shulker: true
+  signs: true
+  slabs: true
+  stairs:
+    rotate: true
+    invert: true
+  terracotta: true
+  torch: true
+  trapdoors:
+    rotate: true
+    invert: true
+  walls: true
+  workstations: true
+blacklist:

@@ -1,0 +1,58 @@
+1.20_1.0.13
+D1	Changed order of Recipe loading to prevent an exception.
+D2	Added wildcard block tags to automatically support new block variants without manual updates. 26.3 support.
+1.20_1.0.12
+D1	Fixed an issue with debug logging.
+D2	Added a bunch of blocks that were missing.
+D3	Separated Wrench recipe from config.yml, added shapeless option.
+1.20_1.0.11
+D1	Max MC version is 26.1.2, will try to load on unsupported versions instead of disabling.
+D2	Min MC version is 1.20. New config option auto_apply_resource_pack.
+  	Wrench Texture packs for 1.20-26.1.2. Texture command provides link for texture pack.
+D3	Refactored commands into separate handlers and moved events to dedicated classes. General code cleanup.
+D4	Max version now 26.2
+1.0.10
+D1	Fixed reload command.
+D2	Fixed texture pack.
+D3	1.14-1.20.6 texture packs fixed.
+D4	Fixed issue with name translation in config file.
+D5	Fixed issue with update command. Texture cmd now provides a download link and not auto set texture.
+D6	Added a better blacklist checker for worlds.
+D7	Added 1.21.3+ event handler, added Pale Oak logs. New MC versions should not break plugin anymore.
+D8	Fixed new Event Handler to actually use name of Material.
+D9	Fixed 1.21 Resourcepacks.
+D10	Fixed all resource packs to work with 1.14 to 1.21.4
+D11	Added a check on join to auto swap wrenches from carrot_on_a_stick to the new stick wrench,
+	if they have the permission rotationalwrench.updatewrench, you must give it to them for it to work.
+D12	Returned Wrench item back to carrot_on_a_stick. Undid D11.
+1.14_1.0.9
+D1	Removed Birthday Message code.
+D2	Added better error and log handling
+D3	Fixed broken Paper code
+D4	1.21 Added to allowable versions.
+D5	Added 1.21 blocks.
+1.14_1.0.8
+D1	Start of trying to add debug stick walls.
+D2	Further attempts at D1.
+D3	Added debug stick behavior to walls. 1.19.+ only
+D4	Switched to i18n lang files, reworked update checker.
+D5	Added 1.20 Materials. Added ActionBar messages to HangingSigns/WallHangingsigns, and Walls.
+D6	Added missing Bamboo block and Stripped Bamboo block to Logs.
+1.14_1.0.7
+D1-Added 1.18.2 support to event handler.
+D2-Added 1.19 Mangrove Logs and Stripped Mangrove Logs.
+D3-Fixed error when clicking empty space with Wrench.
+1.14_1.0.6
+D1-Testing Towny support for 1.17
+D2-3 Added Armorstand and 1.14-1.17 support for Towny.
+D4-Added a check to the Towny check that only players using the wrench are checked.
+D5-Added 1.18 to 1.17 event handler.
+D6-Added Null check to Towny check to prevent NPE.
+1.14_1.0.5
+D1-Added ability to change the shaped recipe
+D2-Added configs for wrench translation, and unbreakable.
+D3-Added recipe loader to reload command.
+D4-Fixed issue #5 BUG right click action on a non-rotatable block changes player displayname color
+1.14_1.0.4
+D1-Fixed 1.17 slabs and stairs.
+D2-Added Lightning_Rod support.
